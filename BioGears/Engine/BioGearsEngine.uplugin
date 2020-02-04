@@ -1,0 +1,23 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "BioGears Physiology Engine",
+	"Description": "",
+	"Category": "Physiology.BioGears",
+	"CreatedBy": "Applied Research Associates, Inc.",
+	"CreatedByURL": "http://www.biogearsengine.com",
+	"DocsURL": "http://www.biogears.dev",
+	"MarketplaceURL": "",
+	"SupportURL": "http://www.biogears.dev",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "BioGearsEngine",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}

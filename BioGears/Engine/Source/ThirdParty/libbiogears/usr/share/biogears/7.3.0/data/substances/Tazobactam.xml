@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
+  <Name>Tazobactam</Name>
+  <Classification>Antibiotic</Classification>
+  <MolarMass readOnly="false" unit="g/mol" value="300.3"/>
+  <State>Liquid</State>
+  <Clearance>
+    <Systemic>
+      <FractionExcretedInFeces readOnly="false" value="0"/>
+      <FractionUnboundInPlasma readOnly="false" value="0.785"/>
+      <IntrinsicClearance readOnly="false" unit="mL/min kg" value="1"/>
+      <RenalClearance readOnly="false" unit="mL/min kg" value="1.69"/>
+      <SystemicClearance readOnly="false" unit="mL/min kg" value="2.57"/>
+    </Systemic>
+    <RenalDynamics>
+      <Clearance readOnly="false" unit="mL/min kg" value="1.69"/>
+    </RenalDynamics>
+  </Clearance>
+  <Pharmacokinetics>
+    <Physicochemicals>
+      <AcidDissociationConstant readOnly="false" value="2.1"/>
+      <BindingProtein>Albumin</BindingProtein>
+      <BloodPlasmaRatio readOnly="false" value="0.5"/>
+      <FractionUnboundInPlasma readOnly="false" value="0.785"/>
+      <IonicState>Acid</IonicState>
+      <LogP readOnly="false" value="-2"/>
+      <HydrogenBondCount readOnly="false" value="8"/>
+      <PolarSurfaceArea readOnly="false" value="3"/>
+    </Physicochemicals>
+  </Pharmacokinetics>
+</Substance>
