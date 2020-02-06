@@ -14,7 +14,6 @@ public class BioGearsEngine : ModuleRules
 				// ... add public include paths required here ...
 			}
 			);
-				
 		
 		PrivateIncludePaths.AddRange(
 			new string[] {

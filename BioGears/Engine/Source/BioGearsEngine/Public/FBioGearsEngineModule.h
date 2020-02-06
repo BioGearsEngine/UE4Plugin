@@ -1,7 +1,11 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
 #pragma once
+#include <Templates/UniquePtr.h>
+#include "ModuleManager.h"
+#include <memory>
 
+class UE4BioGearsEngineDriver;
 
 class FBioGearsEngineModule : public IModuleInterface
 {
@@ -18,9 +22,10 @@ public:
 	*/
 	static inline bool IsAvailable()
 	{
-		return FModuleManager::Get().IsModuleLoaded("Module");
+		return FModuleManager::Get().IsModuleLoaded("BioGearsEngine");
 	}
 private:
 	/** Handle to the test dll we will load */
-	void*	ExampleLibraryHandle;
+	void*	libBiogearsHandle;
+	TUniquePtr<UE4BioGearsEngineDriver> driver;
 };

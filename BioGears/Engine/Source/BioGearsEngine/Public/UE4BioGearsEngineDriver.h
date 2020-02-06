@@ -9,15 +9,21 @@
 #include "UE4BioGearsEngine.h"
 #include <biogears/container/concurrent_queue.h>
 
-class UE4BioGearsEngineDriver: public UObject {
+class UE4BioGearsEngineDriver {
 public:
 	UE4BioGearsEngineDriver();
+	UE4BioGearsEngineDriver(FString name);
+	UE4BioGearsEngineDriver(FString working_dir, FString name);
+	
 	UE4BioGearsEngineDriver(UE4BioGearsEngineDriver&) = default;
 	UE4BioGearsEngineDriver(UE4BioGearsEngineDriver&&);
    ~UE4BioGearsEngineDriver();
 
    UE4BioGearsEngineDriver& operator=(const UE4BioGearsEngineDriver&) = delete;
    UE4BioGearsEngineDriver& operator=(UE4BioGearsEngineDriver&&);
+
+   bool load_patient_state(FString);
+   bool load_patient(FString);
 
    void start();   //<! Start Simulation Thread
    void pause_resume(bool);   //<! Sleep Thread
@@ -30,9 +36,9 @@ public:
 
    std::chrono::seconds getSimulationTime();
 
-   BiogearsMetrics    getMetrics();
-   BiogearsConditions getConditions();
-   BiogearsState      getState();
+	biogears::BiogearsMetrics    getMetrics();
+	biogears::BiogearsConditions getConditions();
+	biogears::BiogearsState      getState();
 
 private:
     struct Implementation;
