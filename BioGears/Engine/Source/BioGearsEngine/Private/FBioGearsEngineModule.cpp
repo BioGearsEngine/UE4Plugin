@@ -51,20 +51,20 @@ void FBioGearsEngineModule::StartupModule()
 	if (libBiogearsHandle)
 	{
 		// Call the test function in the third party library that opens a message box
-		UE_LOG(LogTemp, Warning, TEXT("Sucessfully Loaded libBioGears %s"), ANSI_TO_TCHAR(::biogears::full_version_string_str()));
-		UE_LOG(LogTemp, Warning, TEXT("libBioGears will excute from %s"), *FPaths::ProjectDir());
+		UE_LOG(BioGearsLog, Warning, TEXT("Sucessfully Loaded libBioGears %s"), ANSI_TO_TCHAR(::biogears::full_version_string_str()));
+		UE_LOG(BioGearsLog, Warning, TEXT("libBioGears will excute from %s"), *FPaths::ProjectDir());
 
 		FString biogearsContentPath = FString::Printf(TEXT("BioGears/%d.%d.%d"), ::biogears::biogears_major_version()
 			, ::biogears::biogears_minor_version()
 			, ::biogears::biogears_patch_version());
 
 		FString biogearsContentDir = FPaths::Combine(FPaths::ProjectDir(), TEXT("Plugins"), TEXT("Content"), biogearsContentPath);
-		UE_LOG(LogTemp, Warning, TEXT("libBioGears runtime_dir is %s"), *biogearsContentDir);
+		UE_LOG(BioGearsLog, Warning, TEXT("libBioGears runtime_dir is %s"), *biogearsContentDir);
 
 		FString FullPath = IFileManager::Get().ConvertToAbsolutePathForExternalAppForRead(TEXT("./"));
-		UE_LOG(LogTemp, Warning, TEXT("libBioGears runtime_dir is %s"), *FullPath);
+		UE_LOG(BioGearsLog, Warning, TEXT("libBioGears runtime_dir is %s"), *FullPath);
 		FullPath = IFileManager::Get().ConvertToAbsolutePathForExternalAppForRead(*FPaths::ProjectDir());
-		UE_LOG(LogTemp, Warning, TEXT("libBioGears runtime_dir is %s"), *FullPath);
+		UE_LOG(BioGearsLog, Warning, TEXT("libBioGears runtime_dir is %s"), *FullPath);
 		driver = MakeUnique<UE4BioGearsEngineDriver>(biogearsContentDir, "UE4Physiology");
 		driver->load_patient_state(TEXT("states/StandardMale@0s.xml"));
 		driver->start();

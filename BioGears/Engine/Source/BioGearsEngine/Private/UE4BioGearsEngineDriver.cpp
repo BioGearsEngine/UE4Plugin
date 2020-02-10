@@ -1,5 +1,6 @@
 #include "UE4BioGearsEngineDriver.h"
 #include "UE4BioGearsEngine.h"
+#include "UE4BioGearsLogger.h"
 
 #include <chrono>
 #include <atomic>
@@ -24,6 +25,7 @@ struct UE4BioGearsEngineDriver::Implementation
 	Implementation(FString dir, FString name);
 
 
+	UE4BioGearsLogger logger;
 	UE4BioGearsEngine engine;
 	Channel _action_queue;
 
@@ -46,7 +48,8 @@ UE4BioGearsEngineDriver::Implementation::Implementation()
 }
 //-------------------------------------------------------------------------------
 UE4BioGearsEngineDriver::Implementation::Implementation(FString dir, FString name)
-	: engine(dir, name)
+	: logger(dir,name)
+    , engine(dir, logger)
 	, engine_running(false)
 	, in_action_cycle(false)
 	, engine_paused(false)
@@ -146,53 +149,53 @@ void UE4BioGearsEngineDriver::start()
 
 	if (!_pimpl->engineThread.joinable()) {
 		_pimpl->engine_running.store(true);
-		auto start_time = std::chrono::steady_clock::now();
 		_pimpl->engineThread = std::thread{ [&]() {
+			auto start_time = std::chrono::steady_clock::now();
 			_pimpl->in_action_cycle.store(true);
-			UE_LOG(LogTemp, Warning, TEXT("BioGears Thread Starting"));
+			UE_LOG(BioGearsLog, Display, TEXT("BioGears Thread Starting"));
 			_pimpl->engine.action_apply_hemorrhage(eExtremity::LeftLeg, 5.);
 			_pimpl->engine.action_apply_tourniquet(eExtremity::LeftLeg, eTourniquet::Applied);
 			_pimpl->engine.advance_time(60s);
 			auto duration = std::chrono::steady_clock::now() - start_time;
-			UE_LOG(LogTemp, Warning, TEXT("BioGears Thread has run for %lld"), std::chrono::duration_cast<std::chrono::seconds>(duration).count());
+			UE_LOG(BioGearsLog, Display, TEXT("BioGears Thread has run for %lld"), std::chrono::duration_cast<std::chrono::seconds>(duration).count());
 			_pimpl->engine.action_apply_hemorrhage(eExtremity::LeftLeg, 5.);
 			_pimpl->engine.action_apply_tourniquet(eExtremity::LeftLeg, eTourniquet::Misapplied);
 			_pimpl->engine.advance_time(60s);
 			duration = std::chrono::steady_clock::now() - start_time;
-			UE_LOG(LogTemp, Warning, TEXT("BioGears Thread has run for %lld"), std::chrono::duration_cast<std::chrono::seconds>(duration).count());
+			UE_LOG(LogTemp, Display, TEXT("BioGears Thread has run for %lld"), std::chrono::duration_cast<std::chrono::seconds>(duration).count());
 			_pimpl->engine.action_apply_tourniquet(eExtremity::LeftLeg, eTourniquet::Applied);
 			_pimpl->engine.advance_time(60s); start_time = std::chrono::steady_clock::now();			_pimpl->engine.action_apply_tourniquet(eExtremity::LeftLeg, eTourniquet::None);
 			_pimpl->engine.advance_time(60s);
 			duration = std::chrono::steady_clock::now() - start_time;
-			UE_LOG(LogTemp, Warning, TEXT("BioGears Thread has run for %lld"), std::chrono::duration_cast<std::chrono::seconds>(duration).count());
+			UE_LOG(BioGearsLog, Display, TEXT("BioGears Thread has run for %lld"), std::chrono::duration_cast<std::chrono::seconds>(duration).count());
 			_pimpl->engine.action_tension_pneumothorax(eSide::Left, ePneumothorax::Open, 0.5);
 			_pimpl->engine.advance_time(60s);
 			duration = std::chrono::steady_clock::now() - start_time;
-			UE_LOG(LogTemp, Warning, TEXT("BioGears Thread has run for %lld"), std::chrono::duration_cast<std::chrono::seconds>(duration).count());
+			UE_LOG(BioGearsLog, Display, TEXT("BioGears Thread has run for %lld"), std::chrono::duration_cast<std::chrono::seconds>(duration).count());
 			_pimpl->engine.action_needle_decompression(eSide::Left, true);
 			_pimpl->engine.advance_time(60s);
 			duration = std::chrono::steady_clock::now() - start_time;
-			UE_LOG(LogTemp, Warning, TEXT("BioGears Thread has run for %lld"), std::chrono::duration_cast<std::chrono::seconds>(duration).count());
+			UE_LOG(BioGearsLog, Display, TEXT("BioGears Thread has run for %lld"), std::chrono::duration_cast<std::chrono::seconds>(duration).count());
 			_pimpl->engine.action_o2_mask(.5, 3., 0.);
 			_pimpl->engine.advance_time(60s);
 			duration = std::chrono::steady_clock::now() - start_time;
-			UE_LOG(LogTemp, Warning, TEXT("BioGears Thread has run for %lld"), std::chrono::duration_cast<std::chrono::seconds>(duration).count());
+			UE_LOG(BioGearsLog, Display, TEXT("BioGears Thread has run for %lld"), std::chrono::duration_cast<std::chrono::seconds>(duration).count());
 			_pimpl->engine.action_infection(eInfectionSeverity::Mild, "Liver", 0.2);
 			_pimpl->engine.advance_time(60s);
 			duration = std::chrono::steady_clock::now() - start_time;
-			UE_LOG(LogTemp, Warning, TEXT("BioGears Thread has run for %lld"), std::chrono::duration_cast<std::chrono::seconds>(duration).count());
+			UE_LOG(BioGearsLog, Display, TEXT("BioGears Thread has run for %lld"), std::chrono::duration_cast<std::chrono::seconds>(duration).count());
 			_pimpl->engine.action_bloodtransfuction(eBloodType::O_Negitive, 500, 10);
 			_pimpl->engine.advance_time(60s);
 			duration = std::chrono::steady_clock::now() - start_time;
-			UE_LOG(LogTemp, Warning, TEXT("BioGears Thread has run for %lld"), std::chrono::duration_cast<std::chrono::seconds>(duration).count());
+			UE_LOG(BioGearsLog, Display, TEXT("BioGears Thread has run for %lld"), std::chrono::duration_cast<std::chrono::seconds>(duration).count());
 			_pimpl->engine.action_thermal_blanket(500, 0.5);
 			_pimpl->engine.advance_time(60s);
 			duration = std::chrono::steady_clock::now() - start_time;
-			UE_LOG(LogTemp, Warning, TEXT("BioGears Thread has run for %lld"), std::chrono::duration_cast<std::chrono::seconds>(duration).count());
+			UE_LOG(BioGearsLog, Display, TEXT("BioGears Thread has run for %lld"), std::chrono::duration_cast<std::chrono::seconds>(duration).count());
 			_pimpl->engine.action_pain_stimulus(eCompartment::LeftArm, 0.3);
 			_pimpl->engine.advance_time(60s);
 			duration = std::chrono::steady_clock::now() - start_time;
-			UE_LOG(LogTemp, Warning, TEXT("BioGears Thread has run for %lld"), std::chrono::duration_cast<std::chrono::seconds>(duration).count());
+			UE_LOG(BioGearsLog, Display, TEXT("BioGears Thread has run for %lld"), std::chrono::duration_cast<std::chrono::seconds>(duration).count());
 			biogears::eUrineColor eColor;
 			_pimpl->engine.get_urine_color(eColor);
 			FString urineColor;
@@ -203,14 +206,14 @@ void UE4BioGearsEngineDriver::start()
 			  case eUrineColor::Pink:		urineColor = TEXT("Pink");    break;
 			  case eUrineColor::Yellow:	    urineColor = TEXT("Yellow");  break;
 			}
-			UE_LOG(LogTemp, Warning, TEXT("BioGears Patient has %s UrineColor"), *urineColor);
+			UE_LOG(BioGearsLog, Display, TEXT("BioGears Patient has %s UrineColor"), *urineColor);
 			_pimpl->engine.advance_time(60s);
 			duration = std::chrono::steady_clock::now() - start_time;
-			UE_LOG(LogTemp, Warning, TEXT("BioGears Thread has run for %lld"), std::chrono::duration_cast<std::chrono::seconds>(duration).count());
+			UE_LOG(BioGearsLog, Display, TEXT("BioGears Thread has run for %lld"), std::chrono::duration_cast<std::chrono::seconds>(duration).count());
 			_pimpl->engine.action_urinate();
 			_pimpl->engine.advance_time(60s);
 			duration = std::chrono::steady_clock::now() - start_time;
-			UE_LOG(LogTemp, Warning, TEXT("BioGears Thread has run for %lld"), std::chrono::duration_cast<std::chrono::seconds>(duration).count());
+			UE_LOG(BioGearsLog, Display, TEXT("BioGears Thread has run for %lld"), std::chrono::duration_cast<std::chrono::seconds>(duration).count());
 			_pimpl->in_action_cycle.store(false);
 		} };
 	}

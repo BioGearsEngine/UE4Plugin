@@ -16,15 +16,20 @@ struct UE4BioGearsEngine::Implementation
 
 	std::atomic_bool ready{ false };
 
-	Implementation();
-	Implementation(std::string dataRoot, std::string n);
+	explicit Implementation();
+	explicit Implementation(const std::string& dataRoot, const std::string& n);
+	explicit Implementation(const std::string& dataRoot, biogears::Logger * const logger);
 };
 UE4BioGearsEngine::Implementation::Implementation()
 	: Implementation(TCHAR_TO_ANSI(*FPaths::GetPath("./")), "UE4BioGearsEngine")
 { }
-UE4BioGearsEngine::Implementation::Implementation(std::string dataRoot, std::string n)
+UE4BioGearsEngine::Implementation::Implementation(const std::string& dataRoot, const std::string& n)
 	: bg(std::make_unique<biogears::BioGearsEngine>(n + ".log", dataRoot + "/"))
 	, name(n)
+{ }
+UE4BioGearsEngine::Implementation::Implementation(const std::string& dataRoot, biogears::Logger * const logger)
+	: bg(std::make_unique<biogears::BioGearsEngine>(logger, dataRoot + "/"))
+	, name("UE4PhysiologyEngine")
 { }
 //-------------------------------------------------------------------------------
 UE4BioGearsEngine::UE4BioGearsEngine()
@@ -38,6 +43,10 @@ UE4BioGearsEngine::UE4BioGearsEngine(FString name)
 }
 UE4BioGearsEngine::UE4BioGearsEngine(FString dataRoot, FString name)
 	: _pimpl(MakeUnique<Implementation>(TCHAR_TO_ANSI(*dataRoot), TCHAR_TO_ANSI(*name)))
+{
+}
+UE4BioGearsEngine::UE4BioGearsEngine(FString dataRoot, UE4BioGearsLogger& logger)
+	: _pimpl(MakeUnique<Implementation>(TCHAR_TO_ANSI(*dataRoot),  static_cast<biogears::Logger* const>(&logger)))
 {
 }
 //-------------------------------------------------------------------------------

@@ -11,12 +11,14 @@
 
 #include "UE4BioGearsEnums.h"
 #include "UE4BioGearsStructs.h"
+#include "UE4BioGearsLogger.h"
 
 class UE4BioGearsEngine {
 public:
 	UE4BioGearsEngine();
 	explicit UE4BioGearsEngine(FString name);
 	explicit UE4BioGearsEngine(FString dataRoot, FString name);
+	explicit UE4BioGearsEngine(FString dataRoot, UE4BioGearsLogger& logger);
 	
 	UE4BioGearsEngine(UE4BioGearsEngine&) = default;
 	UE4BioGearsEngine(UE4BioGearsEngine&&) noexcept;
