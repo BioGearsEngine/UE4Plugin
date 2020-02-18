@@ -6,8 +6,8 @@
 #include "Interfaces/IPluginManager.h"
 #include <biogears/version.h>
 
-#include "UE4BioGearsEngine.h"
-#include "UE4BioGearsEngineDriver.h"
+#include "UBioGearsEngine.h"
+#include "UBioGearsEngineDriver.h"
 
 #define LOCTEXT_NAMESPACE "FBioGearsEngineModule"
 
@@ -60,15 +60,6 @@ void FBioGearsEngineModule::StartupModule()
 
 		FString biogearsContentDir = FPaths::Combine(FPaths::ProjectDir(), TEXT("Plugins"), TEXT("Content"), biogearsContentPath);
 		UE_LOG(BioGearsLog, Warning, TEXT("libBioGears runtime_dir is %s"), *biogearsContentDir);
-
-		FString FullPath = IFileManager::Get().ConvertToAbsolutePathForExternalAppForRead(TEXT("./"));
-		UE_LOG(BioGearsLog, Warning, TEXT("libBioGears runtime_dir is %s"), *FullPath);
-		FullPath = IFileManager::Get().ConvertToAbsolutePathForExternalAppForRead(*FPaths::ProjectDir());
-		UE_LOG(BioGearsLog, Warning, TEXT("libBioGears runtime_dir is %s"), *FullPath);
-		driver = MakeUnique<UE4BioGearsEngineDriver>(biogearsContentDir, "UE4Physiology");
-		driver->load_patient_state(TEXT("states/StandardMale@0s.xml"));
-		driver->start();
-		driver->stop();
 	}
 	else
 	{
@@ -78,14 +69,6 @@ void FBioGearsEngineModule::StartupModule()
 
 void FBioGearsEngineModule::ShutdownModule()
 {
-	// This function may be called during shutdown to clean up your module.  For modules that support dynamic reloading,
-	// we call this function before unloading the module.
-	if (driver)
-	{
-		driver->stop();
-		driver->join();
-	}
-	driver = nullptr;
 	// Free the dll handle
 	FPlatformProcess::FreeDllHandle(libBiogearsHandle);
 	libBiogearsHandle = nullptr;

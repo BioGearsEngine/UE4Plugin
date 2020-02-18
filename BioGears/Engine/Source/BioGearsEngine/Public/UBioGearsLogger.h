@@ -8,10 +8,10 @@
 
 DECLARE_LOG_CATEGORY_EXTERN(BioGearsLog, Log, All);
 
-class UE4BioGearsLogForward : public biogears::LoggerForward {
+class BIOGEARSENGINE_API UBioGearsLogForward : public biogears::LoggerForward {
 public:
-	UE4BioGearsLogForward() = default;
-	~UE4BioGearsLogForward() = default;
+	UBioGearsLogForward() = default;
+	~UBioGearsLogForward() = default;
 	void ForwardDebug(const std::string& msg, const std::string& origin) final;
 	void ForwardInfo(const std::string& msg, const std::string& origin) final;
 	void ForwardWarning(const std::string& msg, const std::string& origin) final;
@@ -19,12 +19,12 @@ public:
 	void ForwardFatal(const std::string& msg, const std::string& origin) final;
 };
 
-class UE4BioGearsLogger : public biogears::Logger {
+class UBioGearsLogger : public biogears::Logger {
 	friend biogears::Loggable;
 
 public:
-	UE4BioGearsLogger(const FString& logFilename, const FString& working_dir);
-	virtual ~UE4BioGearsLogger();
+	UBioGearsLogger(const FString& logFilename, const FString& working_dir);
+	virtual ~UBioGearsLogger();
 
 	void Debug(const FString& msg, const FString& origin = TEXT(""));
 	void Info(const FString& msg, const FString& origin = TEXT(""));

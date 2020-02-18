@@ -5,9 +5,9 @@
 #include "ModuleManager.h"
 #include <memory>
 
-class UE4BioGearsEngineDriver;
+class UBioGearsEngineDriver;
 
-class FBioGearsEngineModule : public IModuleInterface
+class BIOGEARSENGINE_API FBioGearsEngineModule : public IModuleInterface
 {
 public:
 
@@ -27,5 +27,4 @@ public:
 private:
 	/** Handle to the test dll we will load */
 	void*	libBiogearsHandle;
-	TUniquePtr<UE4BioGearsEngineDriver> driver;
 };

@@ -26,8 +26,10 @@ public class BioGearsEngine : ModuleRules
 			new string[]
 			{
 				"Core",
-				"libbiogears",
-				"Projects"
+        "CoreUObject",
+        "Engine",
+				"Projects",
+        "libbiogears"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
