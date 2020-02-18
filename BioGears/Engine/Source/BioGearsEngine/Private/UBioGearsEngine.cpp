@@ -10,8 +10,8 @@
 #include <biogears/engine/controller/BioGearsEngine.h>
 struct UBioGearsEngine::Implementation
 {
-	std::unique_ptr<biogears::Logger>         logger; //<! Only Used if logger not passed to system
-	std::unique_ptr<biogears::BioGearsEngine> bg;
+	TUniquePtr <UBioGearsLogger> logger;     //<! Only Used if logger not passed to system
+	TUniquePtr<biogears::BioGearsEngine> bg;
 
 	std::mutex mutex;
 	std::string name;
@@ -23,22 +23,22 @@ struct UBioGearsEngine::Implementation
 
 	explicit Implementation();
 	explicit Implementation(const std::string& dataRoot, const std::string& n);
-	explicit Implementation(const std::string& dataRoot, biogears::Logger * const logger);
+	explicit Implementation(const std::string& dataRoot, TUniquePtr<UBioGearsLogger>  logger);
 };
 UBioGearsEngine::Implementation::Implementation()
 	: Implementation(TCHAR_TO_ANSI(*FPaths::GetPath("./")), "UBioGearsEngine")
 { }
 UBioGearsEngine::Implementation::Implementation(const std::string& dataRoot, const std::string& n)
-	: logger(std::make_unique<biogears::Logger>(n + ".log", dataRoot + "/"))
-	, bg(std::make_unique<biogears::BioGearsEngine>(logger.get(), dataRoot + "/"))
+	: logger(MakeUnique<UBioGearsLogger>(ANSI_TO_TCHAR(dataRoot.c_str()) + FString(TEXT("/")), ANSI_TO_TCHAR(n.c_str()) + FString(TEXT(".log")) ))
+	, bg(MakeUnique<biogears::BioGearsEngine>(logger.Get(), dataRoot + "/"))
 	, name(n)
 	, log_name(n + ".log")
 	, log_root(dataRoot + "/")
 	, data_root(dataRoot + "/")
 { }
-UBioGearsEngine::Implementation::Implementation(const std::string& dataRoot, biogears::Logger * const log)
-	: logger(nullptr)
-	, bg(std::make_unique<biogears::BioGearsEngine>(log, dataRoot + "/"))
+UBioGearsEngine::Implementation::Implementation(const std::string& dataRoot, TUniquePtr<UBioGearsLogger>  logPtr)
+	: logger(std::move(logPtr))
+	, bg(MakeUnique<biogears::BioGearsEngine>(logger.Get(), dataRoot + "/"))
 	, name("UE4PhysiologyEngine")
 	, log_name("")
 	, log_root(dataRoot + "/")
@@ -58,8 +58,8 @@ UBioGearsEngine::UBioGearsEngine(FString dataRoot, FString name)
 	: _pimpl(MakeUnique<Implementation>(TCHAR_TO_ANSI(*dataRoot), TCHAR_TO_ANSI(*name)))
 {
 }
-UBioGearsEngine::UBioGearsEngine(FString dataRoot, UBioGearsLogger& logger)
-	: _pimpl(MakeUnique<Implementation>(TCHAR_TO_ANSI(*dataRoot), static_cast<biogears::Logger* const>(&logger)))
+UBioGearsEngine::UBioGearsEngine(FString dataRoot, TUniquePtr<UBioGearsLogger> logger)
+	: _pimpl(MakeUnique<Implementation>(TCHAR_TO_ANSI(*dataRoot), std::move(logger)))
 {
 }
 //-------------------------------------------------------------------------------
@@ -107,22 +107,16 @@ bool UBioGearsEngine::load_patient(FString patientFile)
 	//TODO:: Validate InitializeEngine can be called multiple times
 	//TODO:: Might Need TO create a new BG here and retain WD
 	std::lock_guard<std::mutex> guard{ _pimpl->mutex };
-	if (_pimpl->logger) {
-		_pimpl->bg = std::make_unique<biogears::BioGearsEngine>(_pimpl->logger.get(), _pimpl->data_root);
-	} else {
-		_pimpl->bg = std::make_unique<biogears::BioGearsEngine>(_pimpl->bg->GetLogger(), _pimpl->data_root);
-	}
+	_pimpl->bg = MakeUnique<biogears::BioGearsEngine>(_pimpl->logger.Get(), _pimpl->data_root);
+	_pimpl->logger->init();
 	return _pimpl->ready = _pimpl->bg->InitializeEngine(TCHAR_TO_ANSI(*patientFile));
 }
 //-------------------------------------------------------------------------------
 bool UBioGearsEngine::load_patient_state(FString stateFile)
 {
 	std::lock_guard<std::mutex> guard{ _pimpl->mutex };
-	if (_pimpl->logger) {
-		_pimpl->bg = std::make_unique<biogears::BioGearsEngine>(_pimpl->logger.get(), _pimpl->data_root);
-	} else {
-		_pimpl->bg = std::make_unique<biogears::BioGearsEngine>(_pimpl->bg->GetLogger(), _pimpl->data_root);
-	}
+	_pimpl->bg = MakeUnique<biogears::BioGearsEngine>(_pimpl->logger.Get(), _pimpl->data_root);
+	_pimpl->logger->init();
 	return _pimpl->ready = _pimpl->bg->LoadState(TCHAR_TO_ANSI(*stateFile));
 }
 //-------------------------------------------------------------------------------
@@ -252,6 +246,7 @@ bool UBioGearsEngine::action_apply_hemorrhage(EExtremity limb, double flowrate_m
 	auto hemorrhage = biogears::SEHemorrhage();
 	using namespace biogears;
 	switch (limb) {
+	default:
 	case EExtremity::LeftArm:
 		hemorrhage.SetCompartment("LeftArm");
 		break;
@@ -379,6 +374,7 @@ bool UBioGearsEngine::action_infection(EInfectionSeverity severity, FString loca
 
 	switch (severity)
 	{
+	default:
 	case EInfectionSeverity::Eliminated:
 		sepsis.SetSeverity(CDM::enumInfectionSeverity::Eliminated);
 		break;

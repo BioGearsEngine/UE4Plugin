@@ -23,8 +23,11 @@ class UBioGearsLogger : public biogears::Logger {
 	friend biogears::Loggable;
 
 public:
-	UBioGearsLogger(const FString& logFilename, const FString& working_dir);
+	UBioGearsLogger(const FString& working_dir, const FString& logFilename);
+	UBioGearsLogger(UBioGearsLogger&& ) = default;
 	virtual ~UBioGearsLogger();
+
+	void init();
 
 	void Debug(const FString& msg, const FString& origin = TEXT(""));
 	void Info(const FString& msg, const FString& origin = TEXT(""));

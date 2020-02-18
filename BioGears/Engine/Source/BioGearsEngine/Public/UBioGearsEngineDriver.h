@@ -113,7 +113,6 @@ private:
 	using Channel = biogears::scmp::Channel<ActionQueue>;
 	using Source = biogears::scmp::Source<ActionQueue>;
 
-	TUniquePtr<UBioGearsLogger> _logger;
 	TUniquePtr<UBioGearsEngine> _engine;
 
 	Channel     _action_queue;

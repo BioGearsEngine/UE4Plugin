@@ -163,9 +163,8 @@ void UBioGearsEngineDriver::initialize_here(FString name, UObject* parent)
 		, ::biogears::biogears_patch_version());
 
 	FString biogearsContentDir = FPaths::Combine(FPaths::ProjectDir(), TEXT("Plugins"), TEXT("Content"), biogearsContentPath);
-
-	this->_logger = MakeUnique<UBioGearsLogger>(biogearsContentDir, name);
-	this->_engine = MakeUnique<UBioGearsEngine>(biogearsContentDir, *this->_logger);
+	
+	this->_engine = MakeUnique<UBioGearsEngine>(biogearsContentDir, MakeUnique<UBioGearsLogger>(biogearsContentDir, name + TEXT(".log")));
 	this->_action_source = nullptr;
 	this->_action_source = MakeUnique<Source>(_action_queue.as_source());
 
@@ -173,8 +172,7 @@ void UBioGearsEngineDriver::initialize_here(FString name, UObject* parent)
 //-------------------------------------------------------------------------------
 void UBioGearsEngineDriver::initialize(FString working_dir, FString name, UObject* parent)
 {
-	this->_logger = MakeUnique<UBioGearsLogger>(working_dir, name);
-	this->_engine = MakeUnique<UBioGearsEngine>(working_dir, *this->_logger);
+	this->_engine = MakeUnique<UBioGearsEngine>(working_dir, MakeUnique<UBioGearsLogger>(working_dir, name));
 	this->_action_source = nullptr;
 	this->_action_source = MakeUnique<Source>(_action_queue.as_source());
 

@@ -6,7 +6,7 @@ DEFINE_LOG_CATEGORY(BioGearsLog);
 
 void UBioGearsLogForward::ForwardDebug(const std::string& msg, const std::string& origin)
 {
-	UE_LOG(BioGearsLog, Log, TEXT("[%s]: %s"), ANSI_TO_TCHAR(origin.c_str()), ANSI_TO_TCHAR(msg.c_str()));
+	UE_LOG(BioGearsLog, Verbose, TEXT("[%s]: %s"), ANSI_TO_TCHAR(origin.c_str()), ANSI_TO_TCHAR(msg.c_str()));
 }
 //-------------------------------------------------------------------------------
 void UBioGearsLogForward::ForwardInfo(const std::string& msg, const std::string& origin)
@@ -35,18 +35,23 @@ struct UBioGearsLogger::Implementation
 };
 //-------------------------------------------------------------------------------
 
-UBioGearsLogger::UBioGearsLogger(const FString& logFilename, const FString& working_dir)
+UBioGearsLogger::UBioGearsLogger(const FString& working_dir, const FString& logFilename)
 	:biogears::Logger(TCHAR_TO_ANSI(*logFilename), TCHAR_TO_ANSI(*working_dir))
 	, _pimpl(MakeUnique<Implementation>())
 {
-	biogears::Logger::SetForward(&_pimpl->UE4LogStream);
+	init();
 }
+
 //-------------------------------------------------------------------------------
 UBioGearsLogger::~UBioGearsLogger()
 {
 	_pimpl = nullptr;
 }
-
+//-------------------------------------------------------------------------------
+void UBioGearsLogger::init()
+{
+	biogears::Logger::SetForward(&_pimpl->UE4LogStream);
+}
 //-------------------------------------------------------------------------------
 void UBioGearsLogger::Debug(const FString& msg, const FString& origin)
 {

@@ -18,7 +18,7 @@ public:
 	UBioGearsEngine();
 	explicit UBioGearsEngine(FString name);
 	explicit UBioGearsEngine(FString dataRoot, FString name);
-	explicit UBioGearsEngine(FString dataRoot, UBioGearsLogger& logger);
+	explicit UBioGearsEngine(FString dataRoot, TUniquePtr<UBioGearsLogger> logger);
 	
 	UBioGearsEngine(UBioGearsEngine&) = default;
 	UBioGearsEngine(UBioGearsEngine&&) noexcept;
