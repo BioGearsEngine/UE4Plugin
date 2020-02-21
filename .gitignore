@@ -1,3 +1,7 @@
 **Binaries/
 **Intermediate/
+**.exe
+**cmd_bio
+**scenario_driver
+**test_driver
 Content/BioGears/

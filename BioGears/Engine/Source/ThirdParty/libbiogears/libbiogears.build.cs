@@ -174,7 +174,7 @@ public class libbiogears : ModuleRules
     string configuration = (Target.Configuration == UnrealTargetConfiguration.Debug
                              || Target.Configuration == UnrealTargetConfiguration.DebugGame
                              || Target.Configuration == UnrealTargetConfiguration.Development) ? "RelWithDebInfo" : "Release";
-    string[] libraries = { "Log4cpp.lib", "xerces-c_3.lib", "biogears_cdm.lib", "biogears.lib" };
+    string[] libraries = { "Log4cpp.lib", "xerces-c_3_2.lib", "biogears_cdm.lib", "biogears.lib" };
     string[] dlls = { "Log4cpp.dll", "xerces-c_3_2.dll", "libbiogears_cdm.dll", "libbiogears.dll" };
 
     string libPath = Path.Combine(ModuleDirectory, "usr", "lib", msvc_ver, configuration);

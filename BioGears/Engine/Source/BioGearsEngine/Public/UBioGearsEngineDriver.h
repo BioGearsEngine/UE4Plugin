@@ -17,6 +17,16 @@
 
 #include "UBioGearsEngineDriver.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTimeAdvance, float, time_in_simulation_s);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStateUpdated, FBiogearsState, patient_state);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMetricsUpdated, FBiogearsMetrics, patient_metrics);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnConditionsUpdated, FBiogearsConditions, patient_conditions);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FRunningToggled, bool, running);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPausedToggled, bool, paused);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FThrottledToggled, bool, throttled);
+
+
+
 UCLASS(BlueprintType, Config = "BioGears", meta = (DisplayName = "BioGearsThread"))
 class  UBioGearsEngineDriver : public UObject {
 
@@ -27,10 +37,10 @@ public:
 	virtual ~UBioGearsEngineDriver();
 
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Create", meta = (DisplayName = "BioGears::initialize_here"))
-	void initialize_here(FString name, UObject* parent);
-	
+		void initialize_here(FString name, UObject* parent);
+
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Create", meta = (DisplayName = "BioGears::initialize"))
-	void initialize(FString working_dir, FString name, UObject* parent);
+		void initialize(FString working_dir, FString name, UObject* parent);
 
 	UFUNCTION(BlueprintCallable, Category = "Physiology|FileIO", meta = (DisplayName = "BioGears::LoadPatientState"))
 		bool load_patient_state(FString stateName);
@@ -66,7 +76,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "BioGears::Action::Tourniquet"))
 		void action_apply_tourniquet(EExtremity limb, ETourniquet application);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "BioGears::Action::Hemorrhage"))
-		void action_apply_hemorrhage(EExtremity limb, float flowrate_ml_Per_min );
+		void action_apply_hemorrhage(EExtremity limb, float flowrate_ml_Per_min);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "BioGears::Action::TensionPneumothorax"))
 		void action_tension_pneumothorax(ESide side, EPneumothorax type, float severity_0_to_1);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "BioGears::Action::NeedleD"))
@@ -84,7 +94,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "BioGears::Action::oralSubstanceAdministration"))
 		void action_oralSubstanceAdministration(EOralSubstance type, EOralAbsorption route, float dosage_mg);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "BioGears::Action::ThermalBlanket"))
-		void action_thermal_blanket(float watt, float surface_area_fraction );
+		void action_thermal_blanket(float watt, float surface_area_fraction);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "BioGears::Action::PainStimulus"))
 		void action_pain_stimulus(ECompartment compartment, float severity);
 
@@ -92,14 +102,34 @@ public:
 	//	bool create_environment();
 	//UFUNCTION(BlueprintCallable, Category = "Physiology|Registry", meta = (DisplayName = "BioGears::ActionUrinate"))
 	//	bool destroy_environment();
+
+
 //Data Request Functions
-	std::chrono::seconds getSimulationTime();
+	float getSimulationTime();
 
-	FBiogearsMetrics    getMetrics();
-	FBiogearsConditions getConditions();
-	FBiogearsState      getState();
+	UPROPERTY(BlueprintReadOnly, Category = "Data")
+		FBiogearsState patient_state;
+	UPROPERTY(BlueprintReadOnly, Category = "Data")
+		FBiogearsMetrics patient_metrics;
+	UPROPERTY(BlueprintReadOnly, Category = "Data")
+		FBiogearsConditions patient_conditions;
 
-//Destructor Functions
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+		FOnTimeAdvance			 onTimeAdvance;
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+		FOnStateUpdated			 onStateUpdated;
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+		FOnMetricsUpdated		 onMetricsUpdated;
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+		FOnConditionsUpdated	 onConditionsUpdated;
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+		FRunningToggled			 runningToggled;
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+		FPausedToggled			 pausedToggled;
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+		FThrottledToggled		 throttledToggled;
+
+	//Destructor Functions
 	void BeginDestroy() override;
 	bool IsReadyForFinishDestroy() override;
 	void FinishDestroy() override;
@@ -107,7 +137,6 @@ public:
 private:
 	//UBioGearsEngineDriver::UBioGearsEngineDriver(FString name, UClass* parent);
 	//UBioGearsEngineDriver::UBioGearsEngineDriver(FString working_dir, FString name, UClass* parent);
-
 
 	using ActionQueue = biogears::ConcurrentQueue<std::function<bool(void)>>;
 	using Channel = biogears::scmp::Channel<ActionQueue>;
@@ -118,14 +147,12 @@ private:
 	Channel     _action_queue;
 	TUniquePtr<Source>      _action_source;
 
-
 	std::atomic_bool  _engine_thread_continue;
 	std::atomic_bool  _engine_running;
 	std::atomic_bool  _engine_paused;
 	std::atomic_bool  _engine_throttled;
 
 	std::thread _engineThread;
-
 
 	void engine_thread_main();
 	void engine_thread_step();

@@ -101,15 +101,15 @@ namespace xsd
           //
           using namespace xercesc;
 
-          DOMDocument& doc (*e.getOwnerDocument ());
-          const DOMElement& se (x.dom_content ().get ());
-          DOMNamedNodeMap& sa (*se.getAttributes ());
+          xercesc::DOMDocument& doc (*e.getOwnerDocument ());
+          const xercesc::DOMElement& se (x.dom_content ().get ());
+          xercesc::DOMNamedNodeMap& sa (*se.getAttributes ());
 
           for (XMLSize_t i (0), n (sa.getLength ()); i != n; ++i)
             e.setAttributeNode (
               static_cast<DOMAttr*> (doc.importNode (sa.item (i), true)));
 
-          for (DOMNode* sn (se.getFirstChild ());
+          for (xercesc::DOMNode* sn (se.getFirstChild ());
                sn != 0;
                sn = sn->getNextSibling ())
             e.appendChild (doc.importNode (sn, true));

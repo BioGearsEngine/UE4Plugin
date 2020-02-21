@@ -27,17 +27,17 @@ public:
 	UBioGearsEngine& operator=(const UBioGearsEngine&) = delete;
 	UBioGearsEngine& operator=(UBioGearsEngine&&) noexcept;
 
-	std::chrono::seconds getSimulationTime();
-	FBiogearsMetrics    getMetrics();
-	FBiogearsConditions getConditions();
-	FBiogearsState      getState();
+	float getSimulationTime() const;
+	FBiogearsMetrics    getMetrics() const;
+	FBiogearsConditions getConditions() const;
+	FBiogearsState      getState() const;
 
 	bool load_patient(FString patient);
 	bool load_patient_state(FString state);
 	
 	void advance_time(std::chrono::seconds seconds);
 	bool process_action(std::unique_ptr<biogears::SEAction>);
-	bool isReady();
+	bool isReady() const;
 
 	bool action_urinate();
 	bool action_env_change(FEnvironmentalConditions conditons);

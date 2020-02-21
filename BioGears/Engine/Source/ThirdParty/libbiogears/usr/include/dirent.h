@@ -298,7 +298,7 @@ static void _wrewinddir (_WDIR* dirp);
 
 static int scandir (const char *dirname, struct dirent ***namelist,
     int (*filter)(const struct dirent*),
-    int (*compare)(const struct dirent**, const struct dirent**));
+    int (*compare)(const void *, const void *));
 
 static int alphasort (const struct dirent **a, const struct dirent **b);
 
@@ -876,7 +876,7 @@ scandir(
     const char *dirname,
     struct dirent ***namelist,
     int (*filter)(const struct dirent*),
-    int (*compare)(const struct dirent**, const struct dirent**))
+    int (*compare)(const void*, const void*))
 {
     struct dirent **files = NULL;
     size_t size = 0;
@@ -964,8 +964,7 @@ scandir(
                      * End of directory stream reached => sort entries and
                      * exit.
                      */
-                    qsort (files, size, sizeof (void*),
-                        (int (*) (const void*, const void*)) compare);
+                    qsort (files, size, sizeof (void*), compare);
                     break;
 
                 }
@@ -1156,4 +1155,5 @@ dirent_set_errno(
 }
 #endif
 #endif /*DIRENT_H*/
+
 

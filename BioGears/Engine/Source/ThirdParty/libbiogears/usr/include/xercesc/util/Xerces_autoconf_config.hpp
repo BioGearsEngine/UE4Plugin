@@ -84,7 +84,6 @@
 /* #undef XERCES_STATIC_LIBRARY */
 #define XERCES_PLATFORM_EXPORT __declspec(dllexport)
 #define XERCES_PLATFORM_IMPORT __declspec(dllimport)
-#define XERCES_TEMPLATE_EXTERN 
 #ifdef XERCES_DLL_EXPORT
 #  define DLL_EXPORT
 #endif

@@ -111,6 +111,12 @@ void UBioGearsEngineDriver::engine_thread_main()
 				}
 			}
 			_engine->advance_time(1s);
+
+			onStateUpdated.Broadcast(_engine->getState());
+			onMetricsUpdated.Broadcast(_engine->getMetrics());
+			onConditionsUpdated.Broadcast(_engine->getConditions());
+			
+			onTimeAdvance.Broadcast(_engine->getSimulationTime());
 		}
 		else {
 			std::this_thread::sleep_for(16ms);
@@ -164,7 +170,7 @@ void UBioGearsEngineDriver::initialize_here(FString name, UObject* parent)
 
 	FString biogearsContentDir = FPaths::Combine(FPaths::ProjectDir(), TEXT("Plugins"), TEXT("Content"), biogearsContentPath);
 	
-	this->_engine = MakeUnique<UBioGearsEngine>(biogearsContentDir, MakeUnique<UBioGearsLogger>(biogearsContentDir, name + TEXT(".log")));
+	this->_engine = MakeUnique<UBioGearsEngine>(biogearsContentDir, MakeUnique<UBioGearsLogger>(biogearsContentDir, TEXT("/") + name + TEXT(".log")));
 	this->_action_source = nullptr;
 	this->_action_source = MakeUnique<Source>(_action_queue.as_source());
 
@@ -206,18 +212,27 @@ void UBioGearsEngineDriver::start()
 	if (!_engineThread.joinable()) {
 		_engine_thread_continue = true;
 		_engineThread = std::thread{ &UBioGearsEngineDriver::engine_thread_main, this };
+
+		runningToggled.Broadcast(_engine_thread_continue);
+		
 	}
 	else if (!_engine_thread_continue)
 	{
 		_engineThread.join();
 		_engine_thread_continue = true;
 		_engineThread = std::thread{ &UBioGearsEngineDriver::engine_thread_main, this };
+
+		runningToggled.Broadcast(_engine_thread_continue);
+		
 	}
 }
 
 void UBioGearsEngineDriver::pause_resume(bool state)
 {
 	_engine_paused = state;
+
+	pausedToggled.Broadcast(_engine_paused);
+	
 }
 //-------------------------------------------------------------------------------
 void UBioGearsEngineDriver::stop()
@@ -225,6 +240,10 @@ void UBioGearsEngineDriver::stop()
 	_engine_paused = true;
 	_engine_throttled = false;
 	_engine_thread_continue = false;
+	
+	pausedToggled.Broadcast(_engine_paused);
+	runningToggled.Broadcast(_engine_thread_continue);
+	throttledToggled.Broadcast(_engine_throttled);
 }
 //-------------------------------------------------------------------------------
 void UBioGearsEngineDriver::join()
@@ -242,6 +261,8 @@ void UBioGearsEngineDriver::set_throttle(int rate)
 	}	else if (rate > 1)	{
 		_engine_throttled = false;
 	}
+	throttledToggled.Broadcast(_engine_throttled);
+	
 	return;
 }
 //-------------------------------------------------------------------------------
@@ -265,29 +286,11 @@ bool UBioGearsEngineDriver::throttled()
 	return _engine_throttled;
 }
 //-------------------------------------------------------------------------------
-std::chrono::seconds UBioGearsEngineDriver::getSimulationTime()
+float UBioGearsEngineDriver::getSimulationTime()
 {
-
 	return _engine->getSimulationTime();
 }
-//-------------------------------------------------------------------------------
-FBiogearsMetrics    UBioGearsEngineDriver::getMetrics()
-{
 
-	return _engine->getMetrics();
-}
-//-------------------------------------------------------------------------------
-FBiogearsConditions UBioGearsEngineDriver::getConditions()
-{
-
-	return _engine->getConditions();
-}
-//-------------------------------------------------------------------------------
-FBiogearsState      UBioGearsEngineDriver::getState()
-{
-
-	return _engine->getState();
-}
 //-------------------------------------------------------------------------------
 void UBioGearsEngineDriver::BeginDestroy()
 {

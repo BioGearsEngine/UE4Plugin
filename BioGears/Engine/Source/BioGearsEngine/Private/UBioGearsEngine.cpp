@@ -19,6 +19,10 @@ struct UBioGearsEngine::Implementation
 	std::string log_root;
 	std::string data_root;
 
+	FBiogearsMetrics metrics;
+	FBiogearsConditions conditions;
+	FBiogearsState state;
+	
 	std::atomic_bool ready{ false };
 
 	explicit Implementation();
@@ -82,24 +86,24 @@ UBioGearsEngine& UBioGearsEngine::operator=(UBioGearsEngine&& rhs) noexcept
 }
 
 //-------------------------------------------------------------------------------
-std::chrono::seconds UBioGearsEngine::getSimulationTime()
+float UBioGearsEngine::getSimulationTime() const
 {
-	return std::chrono::seconds{ static_cast<int>(_pimpl->bg->GetSimulationTime(biogears::TimeUnit::s)) };
+	return static_cast<float>(_pimpl->bg->GetSimulationTime(biogears::TimeUnit::s));
 }
 //-------------------------------------------------------------------------------
-FBiogearsMetrics    UBioGearsEngine::getMetrics()
+FBiogearsMetrics    UBioGearsEngine::getMetrics() const
 {
-	return {};
+	return _pimpl->metrics;
 }
 //-------------------------------------------------------------------------------
-FBiogearsConditions UBioGearsEngine::getConditions()
+FBiogearsConditions UBioGearsEngine::getConditions() const
 {
-	return {};
+	return _pimpl->conditions;
 }
 //-------------------------------------------------------------------------------
-FBiogearsState      UBioGearsEngine::getState()
+FBiogearsState      UBioGearsEngine::getState() const
 {
-	return {};
+	return _pimpl->state;
 }
 //-------------------------------------------------------------------------------
 bool UBioGearsEngine::load_patient(FString patientFile)
@@ -134,7 +138,7 @@ bool UBioGearsEngine::process_action(std::unique_ptr<biogears::SEAction> action)
 	return result;
 }
 //-------------------------------------------------------------------------------
-bool UBioGearsEngine::isReady()
+bool UBioGearsEngine::isReady() const
 {
 	return _pimpl->ready;
 }
