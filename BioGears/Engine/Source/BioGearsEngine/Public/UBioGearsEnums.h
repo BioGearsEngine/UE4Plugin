@@ -10,6 +10,24 @@
 
 
 UENUM(Blueprintable)
+enum class EGender : uint8 {
+	NONE,
+	MALE,
+	FEMALE,
+	OTHER,
+};
+
+UENUM(Blueprintable)
+enum class EExerciseState : uint8 {
+	SLEEPING,
+	RESTING,
+	SITTING,
+	STANDING,
+	WALKING,
+	RUNNING,
+};
+
+UENUM(Blueprintable)
 	enum class EBloodType : uint8	{
 		O_Negitive,
 		O_Positive,
