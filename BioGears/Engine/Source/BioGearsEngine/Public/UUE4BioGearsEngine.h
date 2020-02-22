@@ -19,6 +19,7 @@
 #include <biogears/cdm/scenario/SEAction.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/controller/BioGears.h>
+#include <biogears/engine/controller/BioGears.h>
 #include <biogears/engine/controller/BioGearsEngine.h>
 #include <biogears/cdm/properties/SEScalarTypes.h>
 
@@ -129,6 +130,11 @@ public:
 		FOnBloodCountComplete on_blood_count_completed;
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 		FOnPulmonaryTextComplete on_pulmonary_test_completed;
+
+	//Destructor Functions
+	void BeginDestroy() override;
+	bool IsReadyForFinishDestroy() override;
+	void FinishDestroy() override;
 private:
 
 		UBioGearsLogger* _logger;     //<! Only Used if logger not passed to system
