@@ -289,7 +289,7 @@ void UUE4BioGearsEngine::update_metrics() {
 	_metrics.bloodChemistry.pulmonaryVenousOxygenPressure = (_pulmonaryVenousOxygenPressure) ? _pulmonaryVenousOxygenPressure->GetValue() : 0.0;
 	_metrics.bloodChemistry.venousCarbonDioxidePressure = (_venousCarbonDioxidePressure) ? _venousCarbonDioxidePressure->GetValue() : 0.0;
 	_metrics.bloodChemistry.venousOxygenPressure = (_venousOxygenPressure) ? _venousOxygenPressure->GetValue() : 0.0;
-	
+
 	_metrics.hasInflammatoryResponse = bloodChemistry.HasInflammatoryResponse();
 
 	auto& inflamatoryResponse = bloodChemistry.GetInflammatoryResponse();
@@ -546,6 +546,7 @@ void UUE4BioGearsEngine::update_state() {
 //-------------------------------------------------------------------------------
 UUE4BioGearsEngine::UUE4BioGearsEngine()
 {
+
 }
 void UUE4BioGearsEngine::initialize_here(FString name)
 {
@@ -556,11 +557,11 @@ void UUE4BioGearsEngine::initialize_with_path(FString dataRoot, FString name)
 	_logger = NewObject<UBioGearsLogger>(this, UBioGearsLogger::StaticClass());
 	_logger->initialize(dataRoot + FString(TEXT("/")), name + FString(TEXT(".log")));
 
-	_bg=MakeUnique<biogears::BioGearsEngine>(_logger->get(), TCHAR_TO_ANSI(*(dataRoot + "/")));
+	_bg = MakeUnique<biogears::BioGearsEngine>(_logger->get(), TCHAR_TO_ANSI(*(dataRoot + "/")));
 	_name = TCHAR_TO_ANSI(*name);
 	_log_name = TCHAR_TO_ANSI(*(name + TEXT(".log")));
 	_log_root = TCHAR_TO_ANSI(*(dataRoot + "/"));
-	_data_root= TCHAR_TO_ANSI(*(dataRoot + "/"));
+	_data_root = TCHAR_TO_ANSI(*(dataRoot + "/"));
 }
 void UUE4BioGearsEngine::initialize_with_logger(FString dataRoot, UBioGearsLogger* logPtr)
 {
@@ -569,7 +570,7 @@ void UUE4BioGearsEngine::initialize_with_logger(FString dataRoot, UBioGearsLogge
 	_name = "UE4PhysiologyEngine";
 	_log_name = "";
 	_log_root = TCHAR_TO_ANSI(*(dataRoot + "/"));
-	_data_root= TCHAR_TO_ANSI(*(dataRoot + "/"));
+	_data_root = TCHAR_TO_ANSI(*(dataRoot + "/"));
 }
 
 //-------------------------------------------------------------------------------
@@ -658,26 +659,150 @@ bool UUE4BioGearsEngine::action_urinate()
 bool UUE4BioGearsEngine::get_urine_analysis()
 {
 	using namespace biogears;
+	FBiogearsUrineAnalysis analysis;
 	std::lock_guard<std::mutex> guard{ _mutex };
 	SEUrinalysis urineAnalysis{ _bg->GetLogger() };
-	const biogears::Renal* constRenalSystem = dynamic_cast<const biogears::Renal*>(_bg->GetRenalSystem());
-	biogears::Renal* renalSystem = const_cast<biogears::Renal*>(constRenalSystem);
 
-
-	renalSystem->CalculateUrinalysis(urineAnalysis);
-	if (urineAnalysis.HasColorResult())
+	if (_bg->GetPatientAssessment(urineAnalysis))
 	{
-		//switch (urineAnalysis.GetColorResult())
-		//{
-		//case CDM::enumUrineColor::DarkYellow:
-		//	eColor = EUrineColor::DarkYellow;
-		//case CDM::enumUrineColor::PaleYellow:
-		//	eColor = EUrineColor::PaleYellow;
-		//case CDM::enumUrineColor::Pink:
-		//	eColor = EUrineColor::Pink;
-		//case CDM::enumUrineColor::Yellow:
-		//	eColor = EUrineColor::Yellow;
-		//}
+		switch (urineAnalysis.GetColorResult()) {
+		default:
+		case CDM::enumUrineColor::PaleYellow:
+			analysis.color = EUrineColor::PaleYellow;
+			break;
+		case CDM::enumUrineColor::Yellow:
+			analysis.color = EUrineColor::Yellow;
+			break;
+		case CDM::enumUrineColor::DarkYellow:
+			analysis.color = EUrineColor::DarkYellow;
+			break;
+		case CDM::enumUrineColor::Pink:
+			analysis.color = EUrineColor::Pink;
+			break;
+		}
+		switch (urineAnalysis.GetAppearanceResult()) {
+		default:
+							
+		case CDM::enumClarityIndicator::Clear:
+			analysis.appearance = EClarityIndicator::Clear;
+			break;
+		case CDM::enumClarityIndicator::SlightlyCloudy:
+			analysis.appearance = EClarityIndicator::SlightlyCloudy;
+			break;
+		case CDM::enumClarityIndicator::Cloudy:
+			analysis.appearance = EClarityIndicator::Cloudy;
+			break;
+		case CDM::enumClarityIndicator::Turbid:
+			analysis.appearance = EClarityIndicator::Turbid;
+			break;
+		}
+	
+		switch (urineAnalysis.GetGlucoseResult()) {
+		default:
+
+		case CDM::enumPresenceIndicator::Negative:
+			analysis.glucose = EPresenceIndicator::Negitive;
+			break;
+		case CDM::enumPresenceIndicator::Positive:
+			analysis.glucose = EPresenceIndicator::Positive;
+			break;
+		}
+
+		switch (urineAnalysis.GetKetoneResult()) {
+		default:
+
+		case CDM::enumPresenceIndicator::Negative:
+			analysis.ketone = EPresenceIndicator::Negitive;
+			break;
+		case CDM::enumPresenceIndicator::Positive:
+			analysis.ketone = EPresenceIndicator::Positive;
+			break;
+		}
+		
+		switch (urineAnalysis.GetBloodResult()) {
+		default:
+
+		case CDM::enumPresenceIndicator::Negative:
+			analysis.blood = EPresenceIndicator::Negitive;
+			break;
+		case CDM::enumPresenceIndicator::Positive:
+			analysis.blood = EPresenceIndicator::Positive;
+			break;
+		}
+		
+		switch (urineAnalysis.GetProteinResult()) {
+		default:
+
+		case CDM::enumPresenceIndicator::Negative:
+			analysis.protien = EPresenceIndicator::Negitive;
+			break;
+		case CDM::enumPresenceIndicator::Positive:
+			analysis.protien = EPresenceIndicator::Positive;
+			break;
+		}
+	
+		switch (urineAnalysis.GetNitriteResult()) {
+		default:
+
+		case CDM::enumPresenceIndicator::Negative:
+			analysis.nitrite = EPresenceIndicator::Negitive;
+			break;
+		case CDM::enumPresenceIndicator::Positive:
+			analysis.nitrite = EPresenceIndicator::Positive;
+			break;
+		}
+
+		switch (urineAnalysis.GetLeukocyteEsteraseResult()) {
+		default:
+
+		case CDM::enumPresenceIndicator::Negative:
+			analysis.leukocyteEsterase = EPresenceIndicator::Negitive;
+			break;
+		case CDM::enumPresenceIndicator::Positive:
+			analysis.leukocyteEsterase = EPresenceIndicator::Positive;
+			break;
+		}
+
+
+		analysis.bilirubin = urineAnalysis.GetBilirubinResult().GetValue();
+		analysis.specificgravity = urineAnalysis.GetSpecificGravityResult().GetValue();
+		analysis.ph = urineAnalysis.GetPHResult().GetValue();
+		analysis.urobilinogen = urineAnalysis.GetUrobilinogenResult().GetValue();
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+
+	on_urine_analysis_completed.Broadcast(analysis);
+
+}
+//-------------------------------------------------------------------------------
+#include <biogears/cdm/patient/assessments/SEComprehensiveMetabolicPanel.h>
+bool UUE4BioGearsEngine::get_comprehensive_metabolic_panel() {
+	using namespace biogears;
+	FBiogearsMetabolicPanel analysis;
+	std::lock_guard<std::mutex> guard{ _mutex };
+	SEComprehensiveMetabolicPanel metabolic_panel{ _bg->GetLogger() };
+
+
+	if (_bg->GetPatientAssessment(metabolic_panel))
+	{
+		analysis.albumin = metabolic_panel.GetAlbumin().GetValue();
+		analysis.ALP = metabolic_panel.GetALP().GetValue();
+		analysis.ALT = metabolic_panel.GetALT().GetValue();
+		analysis.AST = metabolic_panel.GetAST().GetValue();
+		analysis.BUN = metabolic_panel.GetBUN().GetValue();
+		analysis.calcium = metabolic_panel.GetCalcium().GetValue();
+		analysis.chlordide = metabolic_panel.GetChloride().GetValue();
+		analysis.co2 = metabolic_panel.GetCO2().GetValue();
+		analysis.creatine = metabolic_panel.GetCreatinine().GetValue();
+		analysis.glucose = metabolic_panel.GetGlucose().GetValue();
+		analysis.potassium = metabolic_panel.GetPotassium().GetValue();
+		analysis.sodium = metabolic_panel.GetSodium().GetValue();
+		analysis.bilirubin = metabolic_panel.GetTotalBilirubin().GetValue();
+		analysis.protien = metabolic_panel.GetTotalProtein().GetValue();
 		return true;
 	}
 	else
@@ -686,22 +811,80 @@ bool UUE4BioGearsEngine::get_urine_analysis()
 	}
 
 
+	on_metabolic_panel_completed.Broadcast(analysis);
+	return false;
 }
 //-------------------------------------------------------------------------------
-#include <biogears/cdm/patient/assessments/SEComprehensiveMetabolicPanel.h>
-bool UUE4BioGearsEngine::get_comprehensive_metabolic_panel(){ return false; }
-//-------------------------------------------------------------------------------
 #include <biogears/cdm/patient/assessments/SECompleteBloodCount.h>
-bool UUE4BioGearsEngine::get_complete_blood_count(){ return false; }
+bool UUE4BioGearsEngine::get_complete_blood_count() {
+	using namespace biogears;
+	FBiogearsBloodCount analysis;
+	std::lock_guard<std::mutex> guard{ _mutex };
+	SECompleteBloodCount bloodcount{ _bg->GetLogger() };
+
+
+
+	if (_bg->GetPatientAssessment(bloodcount))
+	{
+		analysis.hematocrit = bloodcount.GetHematocrit().GetValue();
+		analysis.hemoglobin = bloodcount.GetHemoglobin().GetValue();
+		analysis.platelet_count = bloodcount.GetPlateletCount().GetValue();
+		analysis.mean_corpusular_hemoglobin = bloodcount.GetMeanCorpuscularHemoglobin().GetValue();
+		analysis.mean_corpuscular_hemoglobin_concentration = bloodcount.GetMeanCorpuscularHemoglobinConcentration().GetValue();
+		analysis.mean_corpuscular_volume = bloodcount.GetMeanCorpuscularVolume().GetValue();
+		analysis.red_blood_cell_count = bloodcount.GetRedBloodCellCount().GetValue();
+		analysis.white_blood_cell_count = bloodcount.GetWhiteBloodCellCount().GetValue();
+		return true;
+	}
+	else
+	{
+		_logger->Error(TEXT("Unable to finish complete_blood_count"), TEXT("UE4BiogearsEngine"));
+		return false;
+	}
+
+
+	on_blood_count_completed.Broadcast(analysis);
+	return false;
+}
 //-------------------------------------------------------------------------------
 #include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>
-bool UUE4BioGearsEngine::get_pulmonary_function_test() { return false; }
-//-------------------------------------------------------------------------------
-#include <biogears/cdm/patient/assessments/SEUrinalysisMicroscopic.h>
-bool UUE4BioGearsEngine::get_urinalysis_microscopic(){ return false; }
-//-------------------------------------------------------------------------------
-#include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
-bool UUE4BioGearsEngine::get_patient_assessment(){ return false; }
+#include <biogears/cdm/properties/SEFunctionVolumeVsTime.h>
+bool UUE4BioGearsEngine::get_pulmonary_function_test() {
+	using namespace biogears;
+	FBiogearsPulmonaryTest analysis;
+	std::lock_guard<std::mutex> guard{ _mutex };
+	SEPulmonaryFunctionTest pulmonary_function{ _bg->GetLogger() };
+	_bg->GetPatientAssessment(pulmonary_function);
+
+	if (_bg->GetPatientAssessment(pulmonary_function))
+	{
+		analysis.number_of_plot_points = pulmonary_function.GetNumberOfPlotPoints();
+		analysis.expiratory_reserve_volume = pulmonary_function.GetExpiratoryReserveVolume().GetValue();
+		analysis.forced_vital_capacity = pulmonary_function.GetForcedVitalCapacity().GetValue();
+		analysis.forced_expiratory_volume = pulmonary_function.GetForcedExpiratoryFlow().GetValue();
+		analysis.functional_residual_capacity = pulmonary_function.GetFunctionalResidualCapacity().GetValue();
+		analysis.inspiratory_capacity = pulmonary_function.GetInspiratoryCapacity().GetValue();
+		analysis.inspiratory_reserve_volume = pulmonary_function.GetInspiratoryReserveVolume().GetValue();
+		analysis.maximum_volunatary_ventilation = pulmonary_function.GetMaximumVoluntaryVentilation().GetValue();
+		analysis.peek_expitatory_flow = pulmonary_function.GetPeakExpiratoryFlow().GetValue();
+		analysis.residual_volume = pulmonary_function.GetResidualVolume().GetValue();
+		analysis.slow_vital_capacity = pulmonary_function.GetSlowVitalCapacity().GetValue();
+		analysis.total_lung_capacity = pulmonary_function.GetTotalLungCapacity().GetValue();
+		analysis.vital_capacity = pulmonary_function.GetVitalCapacity().GetValue();
+		//TODO: Support Lung Volume Plot
+		//		analysis.lung_volume_plot = pulmonary_function.GetLungVolumePlot().Get();
+		return true;
+	}
+	else
+	{
+		_logger->Error(TEXT("Unable to finish pulminary_function_test"), TEXT("UE4BiogearsEngine"));
+		return false;
+	}
+
+
+	on_pulmonary_test_completed.Broadcast(analysis);
+	return false;
+}
 //-------------------------------------------------------------------------------
 #include <biogears/cdm/system/environment/actions/SEEnvironmentChange.h>
 bool UUE4BioGearsEngine::action_env_change(FEnvironmentalConditions conditions)
@@ -1013,7 +1196,7 @@ bool UUE4BioGearsEngine::action_oralSubstanceAdministration(EOralSubstance type,
 	return false;
 }
 //-------------------------------------------------------------------------------
-bool UUE4BioGearsEngine::new_environment(FString key, FEnvironmentalConditions conditions){ return false; }
+bool UUE4BioGearsEngine::new_environment(FString key, FEnvironmentalConditions conditions) { return false; }
 bool UUE4BioGearsEngine::set_environment(FString key) { return false; }
 bool UUE4BioGearsEngine::new_custom_compound(FString key, FBiogearsCompound compound) { return false; }
 bool UUE4BioGearsEngine::custom_compound_infusion(FString key, float substance_volume_ml, float flowrate_ml_Per_min) { return false; }

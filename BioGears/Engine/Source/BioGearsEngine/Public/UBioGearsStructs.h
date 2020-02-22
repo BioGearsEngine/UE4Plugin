@@ -666,18 +666,168 @@ struct FBiogearsSubstanceConcentration
 public:
 	UPROPERTY(BlueprintReadWrite)
 		FString name = TEXT("Unknown");
-		float   concentration_g_per_l = 0.0;
+	float   concentration_g_per_l = 0.0;
 };
 
 
 USTRUCT(BlueprintType)
 struct FBiogearsCompound
 {
-    GENERATED_BODY()
+	GENERATED_BODY()
 
 public:
 	UPROPERTY(BlueprintReadWrite)
 		FString name = TEXT("Unknown");
 	UPROPERTY(BlueprintReadWrite)
 		TArray<FBiogearsSubstanceConcentration> concentrations;
+};
+
+USTRUCT(BlueprintType)
+struct 	FBiogearsUrineAnalysis {
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(BlueprintReadOnly)
+		EUrineColor color;
+	UPROPERTY(BlueprintReadOnly)
+		EClarityIndicator appearance;
+	UPROPERTY(BlueprintReadOnly)
+		EPresenceIndicator glucose;
+	UPROPERTY(BlueprintReadOnly)
+		EPresenceIndicator ketone;
+	UPROPERTY(BlueprintReadOnly)
+		EPresenceIndicator blood;
+	UPROPERTY(BlueprintReadOnly)
+		EPresenceIndicator protien;
+	UPROPERTY(BlueprintReadOnly)
+		EPresenceIndicator nitrite;
+	UPROPERTY(BlueprintReadOnly)
+		EPresenceIndicator leukocyteEsterase;
+
+	UPROPERTY(BlueprintReadOnly)
+		float bilirubin;
+	UPROPERTY(BlueprintReadOnly)
+		float specificgravity;
+	UPROPERTY(BlueprintReadOnly)
+		float ph;
+	UPROPERTY(BlueprintReadOnly)
+		float urobilinogen;
+};
+
+USTRUCT(BlueprintType)
+struct 	FBiogearsMetabolicPanel {
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(BlueprintReadOnly)
+		float albumin;
+	UPROPERTY(BlueprintReadOnly)
+		float ALP;
+	UPROPERTY(BlueprintReadOnly)
+		float ALT;
+	UPROPERTY(BlueprintReadOnly)
+		float AST;
+	UPROPERTY(BlueprintReadOnly)
+		float BUN;
+	UPROPERTY(BlueprintReadOnly)
+		float calcium;
+	UPROPERTY(BlueprintReadOnly)
+		float chlordide;
+	UPROPERTY(BlueprintReadOnly)
+		float co2;
+	UPROPERTY(BlueprintReadOnly)
+		float creatine;
+	UPROPERTY(BlueprintReadOnly)
+		float glucose;
+	UPROPERTY(BlueprintReadOnly)
+		float potassium;
+	UPROPERTY(BlueprintReadOnly)
+		float sodium;
+	UPROPERTY(BlueprintReadOnly)
+		float bilirubin;
+	UPROPERTY(BlueprintReadOnly)
+		float protien;
+};
+
+USTRUCT(BlueprintType)
+struct 	FBiogearsBloodCount {
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(BlueprintReadOnly)
+		float hematocrit;
+	UPROPERTY(BlueprintReadOnly)
+		float hemoglobin;
+	UPROPERTY(BlueprintReadOnly)
+		float platelet_count;
+	UPROPERTY(BlueprintReadOnly)
+		float mean_corpusular_hemoglobin;
+	UPROPERTY(BlueprintReadOnly)
+		float mean_corpuscular_hemoglobin_concentration;
+	UPROPERTY(BlueprintReadOnly)
+		float mean_corpuscular_volume;
+	UPROPERTY(BlueprintReadOnly)
+		float red_blood_cell_count;
+	UPROPERTY(BlueprintReadOnly)
+		float white_blood_cell_count;
+};
+
+USTRUCT(BlueprintType)
+struct 	FBiogearsPulmonaryTest {
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(BlueprintReadOnly)
+		float number_of_plot_points;
+	UPROPERTY(BlueprintReadOnly)
+		float expiratory_reserve_volume;
+	UPROPERTY(BlueprintReadOnly)
+		float forced_vital_capacity;
+	UPROPERTY(BlueprintReadOnly)
+		float forced_expiratory_volume;
+	UPROPERTY(BlueprintReadOnly)
+		float functional_residual_capacity;
+	UPROPERTY(BlueprintReadOnly)
+		float inspiratory_capacity;
+	UPROPERTY(BlueprintReadOnly)
+		float inspiratory_reserve_volume;
+	UPROPERTY(BlueprintReadOnly)
+		float maximum_volunatary_ventilation;
+	UPROPERTY(BlueprintReadOnly)
+		float peek_expitatory_flow;
+	UPROPERTY(BlueprintReadOnly)
+		float residual_volume;
+	UPROPERTY(BlueprintReadOnly)
+		float slow_vital_capacity;
+	UPROPERTY(BlueprintReadOnly)
+		float total_lung_capacity;
+	UPROPERTY(BlueprintReadOnly)
+		float vital_capacity;
+	//TODO: Support Lung Volume Plot
+	//float lung_volume_plot;
+};
+
+USTRUCT(BlueprintType)
+struct 	FUrinalysisMicroscopic {
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(BlueprintReadOnly)
+	EMicroscopicOpservationType type;
+	UPROPERTY(BlueprintReadOnly)
+	float red_blood_cells;
+	UPROPERTY(BlueprintReadOnly)
+	float white_blood_cells;
+	UPROPERTY(BlueprintReadOnly)
+	EMicroscopicObservationAmount epithelia_cells;
+	UPROPERTY(BlueprintReadOnly)
+	float casts;
+	UPROPERTY(BlueprintReadOnly)
+	EMicroscopicObservationAmount crystals;
+	UPROPERTY(BlueprintReadOnly)
+	EMicroscopicObservationAmount bacteria;
+	UPROPERTY(BlueprintReadOnly)
+	EMicroscopicObservationAmount trichomonads;
+	UPROPERTY(BlueprintReadOnly)
+	EMicroscopicObservationAmount yeast;
 };

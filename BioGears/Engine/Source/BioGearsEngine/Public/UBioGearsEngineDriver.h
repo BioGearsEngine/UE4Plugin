@@ -25,8 +25,6 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FRunningToggled, bool, running);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPausedToggled, bool, paused);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FThrottledToggled, bool, throttled);
 
-
-
 UCLASS(BlueprintType, Config = "BioGears", meta = (DisplayName = "BioGearsThread"))
 class  UBioGearsEngineDriver : public UObject {
 
@@ -98,10 +96,27 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "BioGears::Action::PainStimulus"))
 		void action_pain_stimulus(ECompartment compartment, float severity);
 
-	//UFUNCTION(BlueprintCallable, Category = "Physiology|Registery", meta = (DisplayName = "BioGears::ActionUrinate"))
-	//	bool create_environment();
-	//UFUNCTION(BlueprintCallable, Category = "Physiology|Registry", meta = (DisplayName = "BioGears::ActionUrinate"))
-	//	bool destroy_environment();
+	//TODO: I want to play with the concept of managing environments for quick change
+    //TODO: If this works I would like to do it with patients, substances and such
+	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "BioGears::Creation::CreateEnvironment"))
+		bool new_environment(FString key, FEnvironmentalConditions conditions);
+	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "BioGears::Action::SetEnvironment"))
+		bool set_environment(FString key);
+
+	//TODO: Add Custom Substances to the engine while running (You should never change an existing compound and we will make sure of that)
+	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "BioGears::Creation::CreateCustomCompound"))
+		bool new_custom_compound(FString key, FBiogearsCompound compound);
+	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "BioGears::Action::CustomCompoundInfusion"))
+		bool custom_compound_infusion(FString key, float substance_volume_ml, float flowrate_ml_Per_min);
+
+	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "BioGears::Panel::UrineAnalyis"))
+		void get_urine_analysis();
+	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "BioGears::Panel::ComprehensiveMetabolicPanel"))
+		void get_comprehensive_metabolic_panel();
+	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "BioGears::Panel::CompleteBloodCount"))
+		void get_complete_blood_count();
+	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "BioGears::Panel::PulmonaryFunctionTest"))
+		void get_pulmonary_function_test();
 
 
 //Data Request Functions
@@ -129,6 +144,24 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 		FThrottledToggled		 throttledToggled;
 
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+		FOnUrineAnalysisComplete on_urine_analysis_completed;
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+		FOnMetabolicPanelComplete on_metabolic_panel_completed;
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+		FOnBloodCountComplete on_blood_count_completed;
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+		FOnPulmonaryTextComplete on_pulmonary_test_completed;
+
+	UFUNCTION()
+	void broadcast_urine_analysis_completed(FBiogearsUrineAnalysis analysis);
+	UFUNCTION()
+	void broadcast_metabolic_panel_completed(FBiogearsMetabolicPanel analysis);
+	UFUNCTION()
+	void broadcast_blood_count_completed(FBiogearsBloodCount analysis);
+	UFUNCTION()
+	void broadcast_pulmonary_test_completed(FBiogearsPulmonaryTest analysis);
+	
 	//Destructor Functions
 	void BeginDestroy() override;
 	bool IsReadyForFinishDestroy() override;

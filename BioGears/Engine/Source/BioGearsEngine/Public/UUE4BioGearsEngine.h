@@ -24,6 +24,12 @@
 
 #include "UUE4BioGearsEngine.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUrineAnalysisComplete , FBiogearsUrineAnalysis, results);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMetabolicPanelComplete, FBiogearsMetabolicPanel, results);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBloodCountComplete    , FBiogearsBloodCount, results);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPulmonaryTextComplete , FBiogearsPulmonaryTest, results);
+
+
 UCLASS(BlueprintType, Config = "BioGears", meta = (DisplayName = "BioGearsEngine"))
 class BIOGEARSENGINE_API UUE4BioGearsEngine : public UObject {
 	GENERATED_BODY()
@@ -99,24 +105,30 @@ public:
 	bool get_complete_blood_count();
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "Physiology::Panel::PulmonaryFunctionTest"))
 	bool get_pulmonary_function_test ();
-	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "Physiology::Panel::UrinalysisMicroscopic"))
-	bool get_urinalysis_microscopic();
-	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "Physiology::Panel::PatientAssessment"))
-	bool get_patient_assessment();
+	
 
 	//TODO: I want to play with the concept of managing environments for quick change
 	//TODO: If this works I would like to do it with patients, substances and such
-	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "Physiology::Panel::PatientAssessment"))
+	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "Physiology::EnvirEnvironmentoment::Create"))
 	bool new_environment(FString key, FEnvironmentalConditions conditions);
-	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "Physiology::Panel::PatientAssessment"))
+	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "Physiology::Environment::Set"))
 	bool set_environment(FString key);
 
 	//TODO: Add Custom Substances to the engine while running (You should never change an existing compound and we will make sure of that)
-	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "Physiology::Panel::PatientAssessment"))
+	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "Physiology::CustomCompound::Create"))
 		bool new_custom_compound(FString key, FBiogearsCompound compound);
-	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "Physiology::Panel::PatientAssessment"))
+	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "Physiology::CustomCompoun::Infusion"))
 		bool custom_compound_infusion(FString key, float substance_volume_ml, float flowrate_ml_Per_min);
 	
+
+	UPROPERTY(BlueprintAssignable, Category="Events")
+		FOnUrineAnalysisComplete on_urine_analysis_completed;
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+		FOnMetabolicPanelComplete on_metabolic_panel_completed;
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+		FOnBloodCountComplete on_blood_count_completed;
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+		FOnPulmonaryTextComplete on_pulmonary_test_completed;
 private:
 
 		UBioGearsLogger* _logger;     //<! Only Used if logger not passed to system

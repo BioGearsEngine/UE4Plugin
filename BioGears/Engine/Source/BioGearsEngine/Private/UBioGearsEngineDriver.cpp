@@ -171,7 +171,15 @@ void UBioGearsEngineDriver::initialize_here(FString name, UObject* parent)
 
 	FString biogearsContentDir = FPaths::Combine(FPaths::ProjectDir(), TEXT("Plugins"), TEXT("Content"), biogearsContentPath);
 
+	this->_action_source = MakeUnique<Source>(_action_queue.as_source());
+
 	this->_engine = NewObject<UUE4BioGearsEngine>(this, UUE4BioGearsEngine::StaticClass());
+
+	this->_engine->on_urine_analysis_completed.AddDynamic(this, &UBioGearsEngineDriver::broadcast_urine_analysis_completed);
+	this->_engine->on_metabolic_panel_completed.AddDynamic(this, &UBioGearsEngineDriver::broadcast_metabolic_panel_completed);
+	this->_engine->on_blood_count_completed.AddDynamic(this, &UBioGearsEngineDriver::broadcast_blood_count_completed);
+	this->_engine->on_pulmonary_test_completed.AddDynamic(this, &UBioGearsEngineDriver::broadcast_pulmonary_test_completed);
+	
 	auto* logger = NewObject<UBioGearsLogger>(_engine, UBioGearsLogger::StaticClass());
 
 	logger->initialize(biogearsContentDir, TEXT("/") + name + TEXT(".log"));
@@ -299,7 +307,26 @@ float UBioGearsEngineDriver::getSimulationTime()
 {
 	return _engine->getSimulationTime();
 }
-
+//-------------------------------------------------------------------------------
+void UBioGearsEngineDriver::broadcast_urine_analysis_completed(FBiogearsUrineAnalysis analysis)
+{
+	on_urine_analysis_completed.Broadcast(analysis);
+}
+//-------------------------------------------------------------------------------
+void UBioGearsEngineDriver::broadcast_metabolic_panel_completed(FBiogearsMetabolicPanel analysis)
+{
+	on_metabolic_panel_completed.Broadcast(analysis);
+}
+//-------------------------------------------------------------------------------
+void UBioGearsEngineDriver::broadcast_blood_count_completed(FBiogearsBloodCount analysis)
+{
+	on_blood_count_completed.Broadcast(analysis);
+}
+//-------------------------------------------------------------------------------
+void UBioGearsEngineDriver::broadcast_pulmonary_test_completed(FBiogearsPulmonaryTest analysis)
+{
+	on_pulmonary_test_completed.Broadcast(analysis);
+}
 //-------------------------------------------------------------------------------
 void UBioGearsEngineDriver::BeginDestroy()
 {
@@ -324,3 +351,46 @@ void UBioGearsEngineDriver::FinishDestroy()
 	Super::FinishDestroy();
 }
 //-------------------------------------------------------------------------------
+bool UBioGearsEngineDriver::new_environment(FString key, FEnvironmentalConditions conditions)
+{
+	UE_LOG(BioGearsLog, Warning, TEXT("Environments are currently not supported"));
+	return false;
+}
+//-------------------------------------------------------------------------------
+bool UBioGearsEngineDriver::set_environment(FString key)
+{
+	UE_LOG(BioGearsLog, Warning, TEXT("Environments are currently not supported"));
+	return false;
+}
+//-------------------------------------------------------------------------------
+bool UBioGearsEngineDriver::new_custom_compound(FString key, FBiogearsCompound compound)
+{
+	UE_LOG(BioGearsLog, Warning, TEXT("Custom compound are currently not supported"));
+	return false;
+}
+//-------------------------------------------------------------------------------
+bool UBioGearsEngineDriver::custom_compound_infusion(FString key, float substance_volume_ml, float flowrate_ml_Per_min)
+{
+	UE_LOG(BioGearsLog, Warning, TEXT("Custom compound are currently not supported"));
+	return false;
+}
+//-------------------------------------------------------------------------------
+void UBioGearsEngineDriver::get_urine_analysis()
+{
+	_action_source->insert([&]() { return _engine->get_urine_analysis(); });
+}
+//-------------------------------------------------------------------------------
+void UBioGearsEngineDriver::get_comprehensive_metabolic_panel()
+{
+	_action_source->insert([&]() { return _engine->get_comprehensive_metabolic_panel(); });
+}
+//-------------------------------------------------------------------------------
+void UBioGearsEngineDriver::get_complete_blood_count()
+{
+	_action_source->insert([&]() { return _engine->get_complete_blood_count(); });
+}
+//-------------------------------------------------------------------------------
+void UBioGearsEngineDriver::get_pulmonary_function_test()
+{
+	_action_source->insert([&]() { return _engine->get_pulmonary_function_test(); });
+}
