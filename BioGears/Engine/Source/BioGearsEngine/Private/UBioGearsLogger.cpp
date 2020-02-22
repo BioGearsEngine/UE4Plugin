@@ -4,77 +4,78 @@
 #include "CoreMinimal.h"
 DEFINE_LOG_CATEGORY(BioGearsLog);
 
-void UBioGearsLogForward::ForwardDebug(const std::string& msg, const std::string& origin)
+void BioGearsLogForward::ForwardDebug(const std::string& msg, const std::string& origin)
 {
 	UE_LOG(BioGearsLog, Verbose, TEXT("[%s]: %s"), ANSI_TO_TCHAR(origin.c_str()), ANSI_TO_TCHAR(msg.c_str()));
 }
 //-------------------------------------------------------------------------------
-void UBioGearsLogForward::ForwardInfo(const std::string& msg, const std::string& origin)
+void BioGearsLogForward::ForwardInfo(const std::string& msg, const std::string& origin)
 {
 	UE_LOG(BioGearsLog, Display, TEXT("[%s]: %s"), ANSI_TO_TCHAR(origin.c_str()), ANSI_TO_TCHAR(msg.c_str()));
 }
 //-------------------------------------------------------------------------------
-void UBioGearsLogForward::ForwardWarning(const std::string& msg, const std::string& origin)
+void BioGearsLogForward::ForwardWarning(const std::string& msg, const std::string& origin)
 {
 	UE_LOG(BioGearsLog, Warning, TEXT("[%s]: %s"), ANSI_TO_TCHAR(origin.c_str()), ANSI_TO_TCHAR(msg.c_str()));
 }
 //-------------------------------------------------------------------------------
-void UBioGearsLogForward::ForwardError(const std::string& msg, const std::string& origin)
+void BioGearsLogForward::ForwardError(const std::string& msg, const std::string& origin)
 {
 	UE_LOG(BioGearsLog, Error, TEXT("[%s]: %s"), ANSI_TO_TCHAR(origin.c_str()), ANSI_TO_TCHAR(msg.c_str()))
 }
 //-------------------------------------------------------------------------------
-void UBioGearsLogForward::ForwardFatal(const std::string& msg, const std::string& origin)
+void BioGearsLogForward::ForwardFatal(const std::string& msg, const std::string& origin)
 {
 	UE_LOG(BioGearsLog, Fatal, TEXT("[%s]: %s"), ANSI_TO_TCHAR(origin.c_str()), ANSI_TO_TCHAR(msg.c_str()));
 }
-//-------------------------------------------------------------------------------
-struct UBioGearsLogger::Implementation
-{
-	UBioGearsLogForward UE4LogStream;
-};
+
 //-------------------------------------------------------------------------------
 
-UBioGearsLogger::UBioGearsLogger(const FString& working_dir, const FString& logFilename)
-	:biogears::Logger(TCHAR_TO_ANSI(*logFilename), TCHAR_TO_ANSI(*working_dir))
-	, _pimpl(MakeUnique<Implementation>())
+UBioGearsLogger::UBioGearsLogger()	
 {
-	init();
 }
-
+//-------------------------------------------------------------------------------
+void UBioGearsLogger::initialize(const FString& working_dir, const FString& logFilename) {
+	_logger = MakeUnique<biogears::Logger>(TCHAR_TO_ANSI(*logFilename), TCHAR_TO_ANSI(*working_dir));
+	_logger->SetForward(&UE4LogStream);
+}
 //-------------------------------------------------------------------------------
 UBioGearsLogger::~UBioGearsLogger()
 {
-	_pimpl = nullptr;
+	
 }
 //-------------------------------------------------------------------------------
-void UBioGearsLogger::init()
+biogears::Logger* UBioGearsLogger::get() {
+	return _logger.Get();
+}
+//-------------------------------------------------------------------------------
+void UBioGearsLogger::setup_ue4_fowarding()
 {
-	biogears::Logger::SetForward(&_pimpl->UE4LogStream);
+	_logger->SetForward(&UE4LogStream);
 }
 //-------------------------------------------------------------------------------
 void UBioGearsLogger::Debug(const FString& msg, const FString& origin)
 {
-	biogears::Logger::Debug(TCHAR_TO_ANSI(*msg), TCHAR_TO_ANSI(*origin));
+	_logger->Debug(TCHAR_TO_ANSI(*msg), TCHAR_TO_ANSI(*origin));
 }
 //-------------------------------------------------------------------------------
 void UBioGearsLogger::Info(const FString& msg, const FString& origin)
 {
-	biogears::Logger::Info(TCHAR_TO_ANSI(*msg), TCHAR_TO_ANSI(*origin));
+	_logger->Info(TCHAR_TO_ANSI(*msg), TCHAR_TO_ANSI(*origin));
 }
 //-------------------------------------------------------------------------------
 void UBioGearsLogger::Warning(const FString& msg, const FString& origin)
 {
-	biogears::Logger::Warning(TCHAR_TO_ANSI(*msg), TCHAR_TO_ANSI(*origin));
+	_logger->Warning(TCHAR_TO_ANSI(*msg), TCHAR_TO_ANSI(*origin));
 }
 //-------------------------------------------------------------------------------
 void UBioGearsLogger::Error(const FString& msg, const FString& origin)
 {
-	biogears::Logger::Error(TCHAR_TO_ANSI(*msg), TCHAR_TO_ANSI(*origin));
+	_logger->Error(TCHAR_TO_ANSI(*msg), TCHAR_TO_ANSI(*origin));
 }
 //-------------------------------------------------------------------------------
 void UBioGearsLogger::Fatal(const FString& msg, const FString& origin)
 {
-	biogears::Logger::Fatal(TCHAR_TO_ANSI(*msg), TCHAR_TO_ANSI(*origin));
+	_logger->Fatal(TCHAR_TO_ANSI(*msg), TCHAR_TO_ANSI(*origin));
 }
 //-------------------------------------------------------------------------------

@@ -657,3 +657,27 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 		bool diabieties = false;
 };
+
+USTRUCT(BlueprintType)
+struct FBiogearsSubstanceConcentration
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(BlueprintReadWrite)
+		FString name = TEXT("Unknown");
+		float   concentration_g_per_l = 0.0;
+};
+
+
+USTRUCT(BlueprintType)
+struct FBiogearsCompound
+{
+    GENERATED_BODY()
+
+public:
+	UPROPERTY(BlueprintReadWrite)
+		FString name = TEXT("Unknown");
+	UPROPERTY(BlueprintReadWrite)
+		TArray<FBiogearsSubstanceConcentration> concentrations;
+};

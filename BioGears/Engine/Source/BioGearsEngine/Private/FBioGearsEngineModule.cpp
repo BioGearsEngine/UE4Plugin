@@ -6,7 +6,7 @@
 #include "Interfaces/IPluginManager.h"
 #include <biogears/version.h>
 
-#include "UBioGearsEngine.h"
+#include "UUE4BioGearsEngine.h"
 #include "UBioGearsEngineDriver.h"
 
 #define LOCTEXT_NAMESPACE "FBioGearsEngineModule"

@@ -10,7 +10,7 @@
 
 #include "UBioGearsStructs.h"
 #include "UBioGearsEnums.h"
-#include "UBioGearsEngine.h"
+#include "UUE4BioGearsEngine.h"
 #include <biogears/container/concurrent_queue.h>
 #include <biogears/framework/scmp/scmp_channel.tci.h>
 #include <biogears/container/concurrent_queue.tci.h>
@@ -34,13 +34,13 @@ class  UBioGearsEngineDriver : public UObject {
 
 public:
 	UBioGearsEngineDriver(const FObjectInitializer& ObjectInitializer);
-	virtual ~UBioGearsEngineDriver();
+	~UBioGearsEngineDriver() override;
 
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Create", meta = (DisplayName = "BioGears::initialize_here"))
 		void initialize_here(FString name, UObject* parent);
-
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Create", meta = (DisplayName = "BioGears::initialize"))
 		void initialize(FString working_dir, FString name, UObject* parent);
+
 
 	UFUNCTION(BlueprintCallable, Category = "Physiology|FileIO", meta = (DisplayName = "BioGears::LoadPatientState"))
 		bool load_patient_state(FString stateName);
@@ -142,7 +142,7 @@ private:
 	using Channel = biogears::scmp::Channel<ActionQueue>;
 	using Source = biogears::scmp::Source<ActionQueue>;
 
-	TUniquePtr<UBioGearsEngine> _engine;
+	UUE4BioGearsEngine* _engine;
 
 	Channel     _action_queue;
 	TUniquePtr<Source>      _action_source;

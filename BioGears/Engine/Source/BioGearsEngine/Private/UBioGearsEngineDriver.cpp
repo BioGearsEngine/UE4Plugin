@@ -1,5 +1,5 @@
 #include "UBioGearsEngineDriver.h"
-#include "UBioGearsengine.h"
+#include "UUE4BioGearsEngine.h"
 #include "UBioGearsLogger.h"
 
 #include <chrono>
@@ -102,20 +102,21 @@ void UBioGearsEngineDriver::engine_thread_main()
 		using namespace std::chrono_literals;
 		if (_engine && !_engine_paused) {
 			while (_action_queue.size()) {
-				if ( !_action_queue.consume()())
+				if (!_action_queue.consume()())
 				{
 					UE_LOG(BioGearsLog, Error, TEXT("Unable to process given action."));
-				} else
+				}
+				else
 				{
 					UE_LOG(BioGearsLog, Display, TEXT("Processed an action"));
 				}
 			}
-			_engine->advance_time(1s);
+			_engine->advance_time(1);
 
 			onStateUpdated.Broadcast(_engine->getState());
 			onMetricsUpdated.Broadcast(_engine->getMetrics());
 			onConditionsUpdated.Broadcast(_engine->getConditions());
-			
+
 			onTimeAdvance.Broadcast(_engine->getSimulationTime());
 		}
 		else {
@@ -143,7 +144,7 @@ inline void UBioGearsEngineDriver::engine_thread_step()
 				UE_LOG(BioGearsLog, Error, TEXT("Unable to process given action."));
 			}
 		}
-		_engine->advance_time(1s);
+		_engine->advance_time(1);
 	}
 	else {
 		std::this_thread::sleep_for(16ms);
@@ -169,8 +170,12 @@ void UBioGearsEngineDriver::initialize_here(FString name, UObject* parent)
 		, ::biogears::biogears_patch_version());
 
 	FString biogearsContentDir = FPaths::Combine(FPaths::ProjectDir(), TEXT("Plugins"), TEXT("Content"), biogearsContentPath);
-	
-	this->_engine = MakeUnique<UBioGearsEngine>(biogearsContentDir, MakeUnique<UBioGearsLogger>(biogearsContentDir, TEXT("/") + name + TEXT(".log")));
+
+	this->_engine = NewObject<UUE4BioGearsEngine>(this, UUE4BioGearsEngine::StaticClass());
+	auto* logger = NewObject<UBioGearsLogger>(_engine, UBioGearsLogger::StaticClass());
+
+	logger->initialize(biogearsContentDir, TEXT("/") + name + TEXT(".log"));
+	this->_engine->initialize_with_logger(biogearsContentDir, logger);
 	this->_action_source = nullptr;
 	this->_action_source = MakeUnique<Source>(_action_queue.as_source());
 
@@ -178,7 +183,10 @@ void UBioGearsEngineDriver::initialize_here(FString name, UObject* parent)
 //-------------------------------------------------------------------------------
 void UBioGearsEngineDriver::initialize(FString working_dir, FString name, UObject* parent)
 {
-	this->_engine = MakeUnique<UBioGearsEngine>(working_dir, MakeUnique<UBioGearsLogger>(working_dir, name));
+	this->_engine = NewObject<UUE4BioGearsEngine>(this, UUE4BioGearsEngine::StaticClass());
+	auto* logger = NewObject<UBioGearsLogger>(_engine, UBioGearsLogger::StaticClass());
+	logger->initialize(working_dir, name);
+	this->_engine->initialize_with_logger(working_dir, logger);
 	this->_action_source = nullptr;
 	this->_action_source = MakeUnique<Source>(_action_queue.as_source());
 
@@ -214,7 +222,7 @@ void UBioGearsEngineDriver::start()
 		_engineThread = std::thread{ &UBioGearsEngineDriver::engine_thread_main, this };
 
 		runningToggled.Broadcast(_engine_thread_continue);
-		
+
 	}
 	else if (!_engine_thread_continue)
 	{
@@ -223,7 +231,7 @@ void UBioGearsEngineDriver::start()
 		_engineThread = std::thread{ &UBioGearsEngineDriver::engine_thread_main, this };
 
 		runningToggled.Broadcast(_engine_thread_continue);
-		
+
 	}
 }
 
@@ -232,7 +240,7 @@ void UBioGearsEngineDriver::pause_resume(bool state)
 	_engine_paused = state;
 
 	pausedToggled.Broadcast(_engine_paused);
-	
+
 }
 //-------------------------------------------------------------------------------
 void UBioGearsEngineDriver::stop()
@@ -240,7 +248,7 @@ void UBioGearsEngineDriver::stop()
 	_engine_paused = true;
 	_engine_throttled = false;
 	_engine_thread_continue = false;
-	
+
 	pausedToggled.Broadcast(_engine_paused);
 	runningToggled.Broadcast(_engine_thread_continue);
 	throttledToggled.Broadcast(_engine_throttled);
@@ -256,13 +264,14 @@ void UBioGearsEngineDriver::join()
 //-------------------------------------------------------------------------------
 void UBioGearsEngineDriver::set_throttle(int rate)
 {
-	if (rate <= 1)	{
+	if (rate <= 1) {
 		_engine_throttled = true;
-	}	else if (rate > 1)	{
+	}
+	else if (rate > 1) {
 		_engine_throttled = false;
 	}
 	throttledToggled.Broadcast(_engine_throttled);
-	
+
 	return;
 }
 //-------------------------------------------------------------------------------
