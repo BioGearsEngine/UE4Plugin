@@ -175,6 +175,7 @@ private:
 	using Channel = biogears::scmp::Channel<ActionQueue>;
 	using Source = biogears::scmp::Source<ActionQueue>;
 
+	UPROPERTY()
 	UUE4BioGearsEngine* _engine;
 
 	Channel     _action_queue;

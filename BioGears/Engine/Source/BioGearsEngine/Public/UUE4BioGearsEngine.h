@@ -137,6 +137,7 @@ public:
 	void FinishDestroy() override;
 private:
 
+	    UPROPERTY()
 		UBioGearsLogger* _logger;     //<! Only Used if logger not passed to system
 		TUniquePtr<biogears::BioGearsEngine> _bg;
 
