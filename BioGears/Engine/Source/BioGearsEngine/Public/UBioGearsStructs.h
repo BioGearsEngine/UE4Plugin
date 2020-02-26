@@ -15,7 +15,7 @@
 //! May be refactored out.
 //!
 USTRUCT(BlueprintType)
-struct FEnvironmentalConditions
+struct FBioGearsEnvironmentalConditions
 {
 	GENERATED_BODY()
 public:
@@ -45,7 +45,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FBiogearsBloodChemistry {
+struct FBioGearsBloodChemistry {
 	GENERATED_BODY()
 
 public:
@@ -113,7 +113,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FBiogearsInflamatoryRespose {
+struct FBioGearsInflamatoryRespose {
 	GENERATED_BODY()
 public:
 	//Inflamatory Response
@@ -162,7 +162,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FBiogearsCardiovascular {
+struct FBioGearsCardiovascular {
 	GENERATED_BODY()
 public:
 	//Cardiovascular
@@ -229,7 +229,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FBiogearsDrugs {
+struct FBioGearsDrugs {
 	GENERATED_BODY()
 public:
 	//Drugs
@@ -258,7 +258,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FBiogearsEndocrine {
+struct FBioGearsEndocrine {
 	GENERATED_BODY()
 
 public:
@@ -270,7 +270,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FBiogearsEnergy {
+struct FBioGearsEnergy {
 	GENERATED_BODY()
 public:
 	//Energy
@@ -303,7 +303,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FBiogearsGastrointestinal {
+struct FBioGearsGastrointestinal {
 	GENERATED_BODY()
 public:
 	//Gastronintestinal
@@ -330,7 +330,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FBiogearsHepatic {
+struct FBioGearsHepatic {
 	GENERATED_BODY()
 public:
 	//Heptic
@@ -341,7 +341,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FBiogearsNervous {
+struct FBioGearsNervous {
 	GENERATED_BODY()
 public:
 	//Nervous
@@ -366,7 +366,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FBiogearsRenal {
+struct FBioGearsRenal {
 	GENERATED_BODY()
 public:
 	//Renal
@@ -483,7 +483,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FBiogearsRespiratory
+struct FBioGearsRespiratory
 {
 	GENERATED_BODY()
 public:
@@ -532,7 +532,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FBiogearsTissue
+struct FBioGearsTissue
 {
 	GENERATED_BODY()
 public:
@@ -578,7 +578,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FBiogearsMetrics
+struct FBioGearsMetrics
 {
 	GENERATED_BODY()
 public:
@@ -589,36 +589,36 @@ public:
 		float timeStep;
 
 	UPROPERTY(BlueprintReadOnly)
-		FBiogearsBloodChemistry bloodChemistry;
+		FBioGearsBloodChemistry bloodChemistry;
 	UPROPERTY(BlueprintReadOnly)
 		bool hasInflammatoryResponse;
 	UPROPERTY(BlueprintReadOnly)
-		FBiogearsInflamatoryRespose inflamatroyReponse;
+		FBioGearsInflamatoryRespose inflamatroyReponse;
 	UPROPERTY(BlueprintReadOnly)
-		FBiogearsCardiovascular cardiovascular;
+		FBioGearsCardiovascular cardiovascular;
 	UPROPERTY(BlueprintReadOnly)
-		FBiogearsDrugs drugs;
+		FBioGearsDrugs drugs;
 	UPROPERTY(BlueprintReadOnly)
-		FBiogearsEndocrine endocrine;
+		FBioGearsEndocrine endocrine;
 	UPROPERTY(BlueprintReadOnly)
-		FBiogearsEnergy energy;
+		FBioGearsEnergy energy;
 	UPROPERTY(BlueprintReadOnly)
-		FBiogearsGastrointestinal gastrointestinal;
+		FBioGearsGastrointestinal gastrointestinal;
 	UPROPERTY(BlueprintReadOnly)
-		FBiogearsHepatic hepatic;
+		FBioGearsHepatic hepatic;
 	UPROPERTY(BlueprintReadOnly)
-		FBiogearsNervous nervous;
+		FBioGearsNervous nervous;
 	UPROPERTY(BlueprintReadOnly)
-		FBiogearsRenal renal;
+		FBioGearsRenal renal;
 	UPROPERTY(BlueprintReadOnly)
-		FBiogearsRespiratory respiratory;
+		FBioGearsRespiratory respiratory;
 	UPROPERTY(BlueprintReadOnly)
-		FBiogearsTissue tissue;
+		FBioGearsTissue tissue;
 
 };
 
 USTRUCT(BlueprintType)
-struct FBiogearsState
+struct FBioGearsState
 {
 	GENERATED_BODY()
 public:
@@ -634,7 +634,7 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 		float height_cm;
 	UPROPERTY(BlueprintReadOnly)
-		EGender gender;
+		EBioGearsGender gender;
 	UPROPERTY(BlueprintReadOnly)
 		float weight_kg;
 	UPROPERTY(BlueprintReadOnly)
@@ -644,12 +644,12 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 		float body_fat_pct;
 	UPROPERTY(BlueprintReadOnly)
-		EExerciseState exercise_state;
+		EBioGearsExerciseState exercise_state;
 
 };
 
 USTRUCT(BlueprintType)
-struct FBiogearsConditions
+struct FBioGearsConditions
 {
 	GENERATED_BODY()
 
@@ -659,7 +659,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FBiogearsSubstanceConcentration
+struct FBioGearsSubstanceConcentration
 {
 	GENERATED_BODY()
 
@@ -671,7 +671,7 @@ public:
 
 
 USTRUCT(BlueprintType)
-struct FBiogearsCompound
+struct FBioGearsCompound
 {
 	GENERATED_BODY()
 
@@ -679,30 +679,30 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 		FString name = TEXT("Unknown");
 	UPROPERTY(BlueprintReadWrite)
-		TArray<FBiogearsSubstanceConcentration> concentrations;
+		TArray<FBioGearsSubstanceConcentration> concentrations;
 };
 
 USTRUCT(BlueprintType)
-struct 	FBiogearsUrineAnalysis {
+struct 	FBioGearsUrineAnalysis {
 	GENERATED_BODY()
 
 public:
 	UPROPERTY(BlueprintReadOnly)
-		EUrineColor color;
+		EBioGearsUrineColor color;
 	UPROPERTY(BlueprintReadOnly)
-		EClarityIndicator appearance;
+		EBioGearsClarityIndicator appearance;
 	UPROPERTY(BlueprintReadOnly)
-		EPresenceIndicator glucose;
+		EBioGearsPresenceIndicator glucose;
 	UPROPERTY(BlueprintReadOnly)
-		EPresenceIndicator ketone;
+		EBioGearsPresenceIndicator ketone;
 	UPROPERTY(BlueprintReadOnly)
-		EPresenceIndicator blood;
+		EBioGearsPresenceIndicator blood;
 	UPROPERTY(BlueprintReadOnly)
-		EPresenceIndicator protien;
+		EBioGearsPresenceIndicator protien;
 	UPROPERTY(BlueprintReadOnly)
-		EPresenceIndicator nitrite;
+		EBioGearsPresenceIndicator nitrite;
 	UPROPERTY(BlueprintReadOnly)
-		EPresenceIndicator leukocyteEsterase;
+		EBioGearsPresenceIndicator leukocyteEsterase;
 
 	UPROPERTY(BlueprintReadOnly)
 		float bilirubin;
@@ -715,7 +715,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct 	FBiogearsMetabolicPanel {
+struct 	FBioGearsMetabolicPanel {
 	GENERATED_BODY()
 
 public:
@@ -750,7 +750,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct 	FBiogearsBloodCount {
+struct 	FBioGearsBloodCount {
 	GENERATED_BODY()
 
 public:
@@ -773,7 +773,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct 	FBiogearsPulmonaryTest {
+struct 	FBioGearsPulmonaryTest {
 	GENERATED_BODY()
 
 public:
@@ -808,26 +808,26 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct 	FUrinalysisMicroscopic {
+struct 	FBioGearsUrinalysisMicroscopic {
 	GENERATED_BODY()
 
 public:
 	UPROPERTY(BlueprintReadOnly)
-	EMicroscopicOpservationType type;
+	EBioGearsMicroscopicOpservationType type;
 	UPROPERTY(BlueprintReadOnly)
 	float red_blood_cells;
 	UPROPERTY(BlueprintReadOnly)
 	float white_blood_cells;
 	UPROPERTY(BlueprintReadOnly)
-	EMicroscopicObservationAmount epithelia_cells;
+	EBioGearsMicroscopicObservationAmount epithelia_cells;
 	UPROPERTY(BlueprintReadOnly)
 	float casts;
 	UPROPERTY(BlueprintReadOnly)
-	EMicroscopicObservationAmount crystals;
+	EBioGearsMicroscopicObservationAmount crystals;
 	UPROPERTY(BlueprintReadOnly)
-	EMicroscopicObservationAmount bacteria;
+	EBioGearsMicroscopicObservationAmount bacteria;
 	UPROPERTY(BlueprintReadOnly)
-	EMicroscopicObservationAmount trichomonads;
+	EBioGearsMicroscopicObservationAmount trichomonads;
 	UPROPERTY(BlueprintReadOnly)
-	EMicroscopicObservationAmount yeast;
+	EBioGearsMicroscopicObservationAmount yeast;
 };

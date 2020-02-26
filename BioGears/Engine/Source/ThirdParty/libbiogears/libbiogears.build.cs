@@ -17,7 +17,7 @@ public class libbiogears : ModuleRules
 
   private string ProjectContentPath
   {
-    get { return Path.GetFullPath(Path.Combine(ModuleDirectory, "../../../../../Content/")); }
+    get { return Path.GetFullPath(Path.Combine(ModuleDirectory, "../../../../Content/")); }
   }
   public libbiogears(ReadOnlyTargetRules Target) : base(Target)
   {
@@ -90,7 +90,7 @@ public class libbiogears : ModuleRules
 
   protected void prepare_content(string version)
   {
-    string biogears_content_destination = Path.Combine(ProjectContentPath, "BioGears", version);
+    string biogears_content_destination = Path.Combine(ProjectContentPath, version);
     string biogears_data_path = Path.Combine(ModuleDirectory, "usr", "share", "biogears", version, "data");
     string biogears_xsd_path = Path.Combine(ModuleDirectory, "usr", "share", "biogears", version, "xsd");
 

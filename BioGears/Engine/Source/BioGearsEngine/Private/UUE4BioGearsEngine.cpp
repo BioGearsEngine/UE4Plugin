@@ -523,9 +523,9 @@ void UUE4BioGearsEngine::update_state() {
 
 	_state.age_yr = (patient.HasAge()) ? patient.GetAge(biogears::TimeUnit::yr) : 0.0;
 	_state.height_cm = (patient.HasHeight()) ? patient.GetHeight(biogears::LengthUnit::cm) : 0.0;
-	_state.gender = (!patient.HasGender()) ? EGender::NONE
-		: (patient.GetGender() == CDM::enumSex::Male) ? EGender::MALE
-		: EGender::OTHER;
+	_state.gender = (!patient.HasGender()) ? EBioGearsGender::NONE
+		: (patient.GetGender() == CDM::enumSex::Male) ? EBioGearsGender::MALE
+		: EBioGearsGender::OTHER;
 	_state.weight_kg = (patient.HasWeight()) ? patient.GetWeight(biogears::MassUnit::kg) : 0.0f;
 	if (patient.HasWeight() && patient.HasWeight()) {
 		auto BSA = std::sqrt(patient.GetHeight(biogears::LengthUnit::cm) * patient.GetWeight(biogears::MassUnit::kg) / 3600.0);
@@ -539,7 +539,7 @@ void UUE4BioGearsEngine::update_state() {
 	}
 	_state.body_fat_pct = (patient.HasBodyFatFraction()) ? patient.GetBodyFatFraction() : 0.0;
 	//TODO: Lets take intensity and make a series of animated GIFs inspired off vault-boy
-	_state.exercise_state = (_bg->GetActions().GetPatientActions().HasExercise()) ? EExerciseState::STANDING : EExerciseState::RUNNING;
+	_state.exercise_state = (_bg->GetActions().GetPatientActions().HasExercise()) ? EBioGearsExerciseState::STANDING : EBioGearsExerciseState::RUNNING;
 
 
 }
@@ -586,17 +586,17 @@ float UUE4BioGearsEngine::getSimulationTime() const
 	return static_cast<float>(_bg->GetSimulationTime(biogears::TimeUnit::s));
 }
 //-------------------------------------------------------------------------------
-FBiogearsMetrics    UUE4BioGearsEngine::getMetrics() const
+FBioGearsMetrics    UUE4BioGearsEngine::getMetrics() const
 {
 	return _metrics;
 }
 //-------------------------------------------------------------------------------
-FBiogearsConditions UUE4BioGearsEngine::getConditions() const
+FBioGearsConditions UUE4BioGearsEngine::getConditions() const
 {
 	return _conditions;
 }
 //-------------------------------------------------------------------------------
-FBiogearsState      UUE4BioGearsEngine::getState() const
+FBioGearsState      UUE4BioGearsEngine::getState() const
 {
 	return _state;
 }
@@ -660,7 +660,7 @@ bool UUE4BioGearsEngine::action_urinate()
 bool UUE4BioGearsEngine::get_urine_analysis()
 {
 	using namespace biogears;
-	FBiogearsUrineAnalysis analysis;
+	FBioGearsUrineAnalysis analysis;
 	std::lock_guard<std::mutex> guard{ _mutex };
 	SEUrinalysis urineAnalysis{ _bg->GetLogger() };
 
@@ -670,32 +670,32 @@ bool UUE4BioGearsEngine::get_urine_analysis()
 		switch (urineAnalysis.GetColorResult()) {
 		default:
 		case CDM::enumUrineColor::PaleYellow:
-			analysis.color = EUrineColor::PaleYellow;
+			analysis.color = EBioGearsUrineColor::PaleYellow;
 			break;
 		case CDM::enumUrineColor::Yellow:
-			analysis.color = EUrineColor::Yellow;
+			analysis.color = EBioGearsUrineColor::Yellow;
 			break;
 		case CDM::enumUrineColor::DarkYellow:
-			analysis.color = EUrineColor::DarkYellow;
+			analysis.color = EBioGearsUrineColor::DarkYellow;
 			break;
 		case CDM::enumUrineColor::Pink:
-			analysis.color = EUrineColor::Pink;
+			analysis.color = EBioGearsUrineColor::Pink;
 			break;
 		}
 		switch (urineAnalysis.GetAppearanceResult()) {
 		default:
 
 		case CDM::enumClarityIndicator::Clear:
-			analysis.appearance = EClarityIndicator::Clear;
+			analysis.appearance = EBioGearsClarityIndicator::Clear;
 			break;
 		case CDM::enumClarityIndicator::SlightlyCloudy:
-			analysis.appearance = EClarityIndicator::SlightlyCloudy;
+			analysis.appearance = EBioGearsClarityIndicator::SlightlyCloudy;
 			break;
 		case CDM::enumClarityIndicator::Cloudy:
-			analysis.appearance = EClarityIndicator::Cloudy;
+			analysis.appearance = EBioGearsClarityIndicator::Cloudy;
 			break;
 		case CDM::enumClarityIndicator::Turbid:
-			analysis.appearance = EClarityIndicator::Turbid;
+			analysis.appearance = EBioGearsClarityIndicator::Turbid;
 			break;
 		}
 
@@ -703,10 +703,10 @@ bool UUE4BioGearsEngine::get_urine_analysis()
 		default:
 
 		case CDM::enumPresenceIndicator::Negative:
-			analysis.glucose = EPresenceIndicator::Negitive;
+			analysis.glucose = EBioGearsPresenceIndicator::Negitive;
 			break;
 		case CDM::enumPresenceIndicator::Positive:
-			analysis.glucose = EPresenceIndicator::Positive;
+			analysis.glucose = EBioGearsPresenceIndicator::Positive;
 			break;
 		}
 
@@ -714,10 +714,10 @@ bool UUE4BioGearsEngine::get_urine_analysis()
 		default:
 
 		case CDM::enumPresenceIndicator::Negative:
-			analysis.ketone = EPresenceIndicator::Negitive;
+			analysis.ketone = EBioGearsPresenceIndicator::Negitive;
 			break;
 		case CDM::enumPresenceIndicator::Positive:
-			analysis.ketone = EPresenceIndicator::Positive;
+			analysis.ketone = EBioGearsPresenceIndicator::Positive;
 			break;
 		}
 
@@ -725,10 +725,10 @@ bool UUE4BioGearsEngine::get_urine_analysis()
 		default:
 
 		case CDM::enumPresenceIndicator::Negative:
-			analysis.blood = EPresenceIndicator::Negitive;
+			analysis.blood = EBioGearsPresenceIndicator::Negitive;
 			break;
 		case CDM::enumPresenceIndicator::Positive:
-			analysis.blood = EPresenceIndicator::Positive;
+			analysis.blood = EBioGearsPresenceIndicator::Positive;
 			break;
 		}
 
@@ -736,10 +736,10 @@ bool UUE4BioGearsEngine::get_urine_analysis()
 		default:
 
 		case CDM::enumPresenceIndicator::value::Negative:
-			analysis.protien = EPresenceIndicator::Negitive;
+			analysis.protien = EBioGearsPresenceIndicator::Negitive;
 			break;
 		case CDM::enumPresenceIndicator::value::Positive:
-			analysis.protien = EPresenceIndicator::Positive;
+			analysis.protien = EBioGearsPresenceIndicator::Positive;
 			break;
 		}
 
@@ -747,10 +747,10 @@ bool UUE4BioGearsEngine::get_urine_analysis()
 		default:
 
 		case CDM::enumPresenceIndicator::Negative:
-			analysis.nitrite = EPresenceIndicator::Negitive;
+			analysis.nitrite = EBioGearsPresenceIndicator::Negitive;
 			break;
 		case CDM::enumPresenceIndicator::Positive:
-			analysis.nitrite = EPresenceIndicator::Positive;
+			analysis.nitrite = EBioGearsPresenceIndicator::Positive;
 			break;
 		}
 
@@ -758,10 +758,10 @@ bool UUE4BioGearsEngine::get_urine_analysis()
 		default:
 
 		case CDM::enumPresenceIndicator::Negative:
-			analysis.leukocyteEsterase = EPresenceIndicator::Negitive;
+			analysis.leukocyteEsterase = EBioGearsPresenceIndicator::Negitive;
 			break;
 		case CDM::enumPresenceIndicator::Positive:
-			analysis.leukocyteEsterase = EPresenceIndicator::Positive;
+			analysis.leukocyteEsterase = EBioGearsPresenceIndicator::Positive;
 			break;
 		}
 
@@ -783,7 +783,7 @@ bool UUE4BioGearsEngine::get_urine_analysis()
 #include <biogears/cdm/patient/assessments/SEComprehensiveMetabolicPanel.h>
 bool UUE4BioGearsEngine::get_comprehensive_metabolic_panel() {
 	using namespace biogears;
-	FBiogearsMetabolicPanel analysis;
+	FBioGearsMetabolicPanel analysis;
 	std::lock_guard<std::mutex> guard{ _mutex };
 	SEComprehensiveMetabolicPanel metabolic_panel{ _bg->GetLogger() };
 
@@ -817,7 +817,7 @@ bool UUE4BioGearsEngine::get_comprehensive_metabolic_panel() {
 #include <biogears/cdm/patient/assessments/SECompleteBloodCount.h>
 bool UUE4BioGearsEngine::get_complete_blood_count() {
 	using namespace biogears;
-	FBiogearsBloodCount analysis;
+	FBioGearsBloodCount analysis;
 	std::lock_guard<std::mutex> guard{ _mutex };
 	SECompleteBloodCount bloodcount{ _bg->GetLogger() };
 
@@ -846,7 +846,7 @@ bool UUE4BioGearsEngine::get_complete_blood_count() {
 #include <biogears/cdm/properties/SEFunctionVolumeVsTime.h>
 bool UUE4BioGearsEngine::get_pulmonary_function_test() {
 	using namespace biogears;
-	FBiogearsPulmonaryTest analysis;
+	FBioGearsPulmonaryTest analysis;
 	std::lock_guard<std::mutex> guard{ _mutex };
 	SEPulmonaryFunctionTest pulmonary_function{ _bg->GetLogger() };
 	_bg->GetPatientAssessment(pulmonary_function);
@@ -880,43 +880,43 @@ bool UUE4BioGearsEngine::get_pulmonary_function_test() {
 }
 //-------------------------------------------------------------------------------
 #include <biogears/cdm/system/environment/actions/SEEnvironmentChange.h>
-bool UUE4BioGearsEngine::action_env_change(FEnvironmentalConditions conditions)
+bool UUE4BioGearsEngine::action_env_change(FBioGearsEnvironmentalConditions conditions)
 {
 	//TODO: Refactor - Introduce an environment struct
 	return false;
 }
 //-------------------------------------------------------------------------------
 #include <biogears/cdm/patient/actions/SETourniquet.h>
-bool UUE4BioGearsEngine::action_apply_tourniquet(EExtremity limb, ETourniquet application)
+bool UUE4BioGearsEngine::action_apply_tourniquet(EBioGearsExtremity limb, EBioGearsTourniquet application)
 {
 	using namespace biogears;
 	auto tourniquet = SETourniquet();
 
 	switch (limb)
 	{
-	case EExtremity::LeftArm:
+	case EBioGearsExtremity::LeftArm:
 		tourniquet.SetCompartment("LeftArm");
 		break;
-	case EExtremity::RightArm:
+	case EBioGearsExtremity::RightArm:
 		tourniquet.SetCompartment("RightArm");
 		break;
-	case EExtremity::LeftLeg:
+	case EBioGearsExtremity::LeftLeg:
 		tourniquet.SetCompartment("LeftLeg");
 		break;
-	case EExtremity::RightLeg:
+	case EBioGearsExtremity::RightLeg:
 		tourniquet.SetCompartment("RightLeg");
 		break;
 	}
 
 	switch (application)
 	{
-	case ETourniquet::Applied:
+	case EBioGearsTourniquet::Applied:
 		tourniquet.SetTourniquetLevel(CDM::enumTourniquetApplicationLevel::Applied);
 		break;
-	case ETourniquet::Misapplied:
+	case EBioGearsTourniquet::Misapplied:
 		tourniquet.SetTourniquetLevel(CDM::enumTourniquetApplicationLevel::Misapplied);
 		break;
-	case ETourniquet::None:
+	case EBioGearsTourniquet::None:
 		tourniquet.SetTourniquetLevel(CDM::enumTourniquetApplicationLevel::None);
 		break;
 	}
@@ -931,7 +931,7 @@ bool UUE4BioGearsEngine::action_apply_tourniquet(EExtremity limb, ETourniquet ap
 }
 //-------------------------------------------------------------------------------
 #include <biogears/cdm/patient/actions/SEHemorrhage.h>
-bool UUE4BioGearsEngine::action_apply_hemorrhage(EExtremity limb, float flowrate_ml_Per_min)
+bool UUE4BioGearsEngine::action_apply_hemorrhage(EBioGearsExtremity limb, float flowrate_ml_Per_min)
 {
 
 	//TODO: Thread Guard
@@ -939,16 +939,16 @@ bool UUE4BioGearsEngine::action_apply_hemorrhage(EExtremity limb, float flowrate
 	using namespace biogears;
 	switch (limb) {
 	default:
-	case EExtremity::LeftArm:
+	case EBioGearsExtremity::LeftArm:
 		hemorrhage.SetCompartment("LeftArm");
 		break;
-	case EExtremity::RightArm:
+	case EBioGearsExtremity::RightArm:
 		hemorrhage.SetCompartment("RightArm");
 		break;
-	case EExtremity::LeftLeg:
+	case EBioGearsExtremity::LeftLeg:
 		hemorrhage.SetCompartment("LeftLeg");
 		break;
-	case EExtremity::RightLeg:
+	case EBioGearsExtremity::RightLeg:
 		hemorrhage.SetCompartment("RightLeg");
 		break;
 	}
@@ -964,23 +964,23 @@ bool UUE4BioGearsEngine::action_apply_hemorrhage(EExtremity limb, float flowrate
 }
 //-------------------------------------------------------------------------------
 #include <biogears/cdm/patient/actions/SETensionPneumothorax.h>
-bool UUE4BioGearsEngine::action_tension_pneumothorax(ESide side, EPneumothorax type, float severity_0_to_1)
+bool UUE4BioGearsEngine::action_tension_pneumothorax(EBioGearsSide side, EBioGearsPneumothorax type, float severity_0_to_1)
 {
 	using namespace biogears;
 	auto pneumothorax = SETensionPneumothorax();
 	switch (side) {
-	case ESide::Left:
+	case EBioGearsSide::Left:
 		pneumothorax.SetSide(CDM::enumSide::Left);
 		break;
-	case ESide::Right:
+	case EBioGearsSide::Right:
 		pneumothorax.SetSide(CDM::enumSide::Right);
 		break;
 	}
 	switch (type) {
-	case EPneumothorax::Open:
+	case EBioGearsPneumothorax::Open:
 		pneumothorax.SetType(CDM::enumPneumothoraxType::Open);
 		break;
-	case EPneumothorax::Closed:
+	case EBioGearsPneumothorax::Closed:
 		pneumothorax.SetType(CDM::enumPneumothoraxType::Closed);
 		break;
 
@@ -998,15 +998,15 @@ bool UUE4BioGearsEngine::action_tension_pneumothorax(ESide side, EPneumothorax t
 }
 //-------------------------------------------------------------------------------
 #include <biogears/cdm/patient/actions/SENeedleDecompression.h>
-bool UUE4BioGearsEngine::action_needle_decompression(ESide side, bool active)
+bool UUE4BioGearsEngine::action_needle_decompression(EBioGearsSide side, bool active)
 {
 	using namespace biogears;
 	auto needleD = SENeedleDecompression();
 	switch (side) {
-	case ESide::Left:
+	case EBioGearsSide::Left:
 		needleD.SetSide(CDM::enumSide::Left);
 		break;
-	case ESide::Right:
+	case EBioGearsSide::Right:
 		needleD.SetSide(CDM::enumSide::Right);
 		break;
 	}
@@ -1059,7 +1059,7 @@ bool UUE4BioGearsEngine::action_o2_mask(float o2_fraction, float o2_volume1, flo
 }
 //-------------------------------------------------------------------------------
 #include <biogears/cdm/patient/actions/SEInfection.h>
-bool UUE4BioGearsEngine::action_infection(EInfectionSeverity severity, FString location, float mic_mg_Per_l)
+bool UUE4BioGearsEngine::action_infection(EBioGearsInfectionSeverity severity, FString location, float mic_mg_Per_l)
 {
 	using namespace biogears;
 	auto sepsis = biogears::SEInfection();
@@ -1067,16 +1067,16 @@ bool UUE4BioGearsEngine::action_infection(EInfectionSeverity severity, FString l
 	switch (severity)
 	{
 	default:
-	case EInfectionSeverity::Eliminated:
+	case EBioGearsInfectionSeverity::Eliminated:
 		sepsis.SetSeverity(CDM::enumInfectionSeverity::Eliminated);
 		break;
-	case EInfectionSeverity::Mild:
+	case EBioGearsInfectionSeverity::Mild:
 		sepsis.SetSeverity(CDM::enumInfectionSeverity::Mild);
 		break;
-	case EInfectionSeverity::Moderate:
+	case EBioGearsInfectionSeverity::Moderate:
 		sepsis.SetSeverity(CDM::enumInfectionSeverity::Moderate);
 		break;
-	case EInfectionSeverity::Severe:
+	case EBioGearsInfectionSeverity::Severe:
 		sepsis.SetSeverity(CDM::enumInfectionSeverity::Severe);
 		break;
 	}
@@ -1096,7 +1096,7 @@ bool UUE4BioGearsEngine::action_infection(EInfectionSeverity severity, FString l
 //-------------------------------------------------------------------------------
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
-bool UUE4BioGearsEngine::action_bloodtransfusion(EBloodType type, float blood_volume_ml, float flowrate_ml_Per_min)
+bool UUE4BioGearsEngine::action_bloodtransfusion(EBioGearsBloodType type, float blood_volume_ml, float flowrate_ml_Per_min)
 {
 	using namespace biogears;
 	std::lock_guard<std::mutex> guard{ _mutex };
@@ -1104,14 +1104,14 @@ bool UUE4BioGearsEngine::action_bloodtransfusion(EBloodType type, float blood_vo
 
 	switch (type)
 	{
-	case EBloodType::O_Negitive:	bloodSource = _bg->GetSubstanceManager().GetCompound("Blood_ONegative"); break;
-	case EBloodType::O_Positive:	bloodSource = _bg->GetSubstanceManager().GetCompound("Blood_OPositive"); break;
-	case EBloodType::A_B_Negative:	bloodSource = _bg->GetSubstanceManager().GetCompound("Blood_ABNegative"); break;
-	case EBloodType::A_B_Positive:	bloodSource = _bg->GetSubstanceManager().GetCompound("Blood_ABPositive"); break;
-	case EBloodType::A_Negitive:	bloodSource = _bg->GetSubstanceManager().GetCompound("Blood_ANegative"); break;
-	case EBloodType::A_Positive:	bloodSource = _bg->GetSubstanceManager().GetCompound("Blood_APositive"); break;
-	case EBloodType::B_Negative:	bloodSource = _bg->GetSubstanceManager().GetCompound("Blood_NNegative"); break;
-	case EBloodType::B_Positive:	bloodSource = _bg->GetSubstanceManager().GetCompound("Blood_BPositive"); break;
+	case EBioGearsBloodType::O_Negitive:	bloodSource = _bg->GetSubstanceManager().GetCompound("Blood_ONegative"); break;
+	case EBioGearsBloodType::O_Positive:	bloodSource = _bg->GetSubstanceManager().GetCompound("Blood_OPositive"); break;
+	case EBioGearsBloodType::A_B_Negative:	bloodSource = _bg->GetSubstanceManager().GetCompound("Blood_ABNegative"); break;
+	case EBioGearsBloodType::A_B_Positive:	bloodSource = _bg->GetSubstanceManager().GetCompound("Blood_ABPositive"); break;
+	case EBioGearsBloodType::A_Negitive:	bloodSource = _bg->GetSubstanceManager().GetCompound("Blood_ANegative"); break;
+	case EBioGearsBloodType::A_Positive:	bloodSource = _bg->GetSubstanceManager().GetCompound("Blood_APositive"); break;
+	case EBioGearsBloodType::B_Negative:	bloodSource = _bg->GetSubstanceManager().GetCompound("Blood_NNegative"); break;
+	case EBioGearsBloodType::B_Positive:	bloodSource = _bg->GetSubstanceManager().GetCompound("Blood_BPositive"); break;
 	default:	bloodSource = _bg->GetSubstanceManager().GetCompound("Blood_ONegative"); break;
 	}
 
@@ -1151,15 +1151,15 @@ bool UUE4BioGearsEngine::action_thermal_blanket(float watt, float surface_area_f
 }
 //-------------------------------------------------------------------------------
 #include <biogears/cdm/patient/actions/SEPainStimulus.h>
-bool UUE4BioGearsEngine::action_pain_stimulus(ECompartment compartment, float severity)
+bool UUE4BioGearsEngine::action_pain_stimulus(EBioGearsCompartment compartment, float severity)
 {
 	auto pain = biogears::SEPainStimulus();
 	switch (compartment)
 	{
-	case ECompartment::LeftArm:	pain.SetLocation("LeftArm"); break;
-	case ECompartment::RightArm:	pain.SetLocation("RightArm"); break;
-	case ECompartment::LeftLeg:	pain.SetLocation("LeftLeg"); break;
-	case ECompartment::RightLeg:	pain.SetLocation("RightLeg"); break;
+	case EBioGearsCompartment::LeftArm:	pain.SetLocation("LeftArm"); break;
+	case EBioGearsCompartment::RightArm:	pain.SetLocation("RightArm"); break;
+	case EBioGearsCompartment::LeftLeg:	pain.SetLocation("LeftLeg"); break;
+	case EBioGearsCompartment::RightLeg:	pain.SetLocation("RightLeg"); break;
 	}
 
 	pain.GetSeverity().SetValue(severity);
@@ -1173,25 +1173,25 @@ bool UUE4BioGearsEngine::action_pain_stimulus(ECompartment compartment, float se
 	}
 	return false;
 }
-bool UUE4BioGearsEngine::action_substanceInfusion(EIvSubstance substance, float substance_volume_ml, float flowrate_ml_Per_min)
+bool UUE4BioGearsEngine::action_substanceInfusion(EBioGearsIvSubstance substance, float substance_volume_ml, float flowrate_ml_Per_min)
 {
 	//TODO: Implement Substance Infusion Action
 	return false;
 }
-bool UUE4BioGearsEngine::action_substanceCompoundInfusion(EIvCompound compound, float compound_volume_ml, float flowrate_ml_Per_min)
+bool UUE4BioGearsEngine::action_substanceCompoundInfusion(EBioGearsIvCompound compound, float compound_volume_ml, float flowrate_ml_Per_min)
 {
 	//TODO: Implement SubstanceCompound Infusion Action
 	return false;
 }
-bool UUE4BioGearsEngine::action_oralSubstanceAdministration(EOralSubstance type, EOralAbsorption, float dosage_mg)
+bool UUE4BioGearsEngine::action_oralSubstanceAdministration(EBioGearsOralSubstance type, EBioGearsOralAbsorption, float dosage_mg)
 {
 	//TODO: Implement Oral Substance  Action
 	return false;
 }
 //-------------------------------------------------------------------------------
-bool UUE4BioGearsEngine::new_environment(FString key, FEnvironmentalConditions conditions) { return false; }
+bool UUE4BioGearsEngine::new_environment(FString key, FBioGearsEnvironmentalConditions conditions) { return false; }
 bool UUE4BioGearsEngine::set_environment(FString key) { return false; }
-bool UUE4BioGearsEngine::new_custom_compound(FString key, FBiogearsCompound compound) { return false; }
+bool UUE4BioGearsEngine::new_custom_compound(FString key, FBioGearsCompound compound) { return false; }
 bool UUE4BioGearsEngine::custom_compound_infusion(FString key, float substance_volume_ml, float flowrate_ml_Per_min) { return false; }
 
 //Destructor Functions

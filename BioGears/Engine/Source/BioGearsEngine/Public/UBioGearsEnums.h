@@ -9,8 +9,8 @@
 #include "UBioGearsEnums.generated.h"
 
 
-UENUM(Blueprintable)
-enum class EGender : uint8 {
+UENUM(Blueprintable, DisplayName="Biogears::Gender")
+enum class EBioGearsGender : uint8 {
 	NONE,
 	MALE,
 	FEMALE,
@@ -18,7 +18,7 @@ enum class EGender : uint8 {
 };
 
 UENUM(Blueprintable)
-enum class EExerciseState : uint8 {
+enum class EBioGearsExerciseState : uint8 {
 	SLEEPING,
 	RESTING,
 	SITTING,
@@ -28,7 +28,7 @@ enum class EExerciseState : uint8 {
 };
 
 UENUM(Blueprintable)
-enum class EBloodType : uint8 {
+enum class EBioGearsBloodType : uint8 {
 	O_Negitive,
 	O_Positive,
 	A_Negitive,
@@ -40,13 +40,13 @@ enum class EBloodType : uint8 {
 };
 
 UENUM(Blueprintable)
-enum class EIvSubstance : uint8 {
+enum class EBioGearsIvSubstance : uint8 {
 	Sub1,
 	Sub2
 };
 
 UENUM(Blueprintable)
-enum class EIvCompound : uint8 {
+enum class EBioGearsIvCompound : uint8 {
 	Sub1,
 	Sub2
 };
@@ -54,14 +54,14 @@ enum class EIvCompound : uint8 {
 
 
 UENUM(Blueprintable)
-enum class EOralSubstance : uint8
+enum class EBioGearsOralSubstance : uint8
 {
 	Fyntynal
 };
 
 
 UENUM(Blueprintable)
-enum class EOralAbsorption : uint8
+enum class EBioGearsOralAbsorption : uint8
 {
 	Instestine,
 	Transmocuusal
@@ -69,7 +69,7 @@ enum class EOralAbsorption : uint8
 
 
 UENUM(Blueprintable)
-enum class EInfectionSeverity : uint8 {
+enum class EBioGearsInfectionSeverity : uint8 {
 	Eliminated,
 	Mild,
 	Moderate,
@@ -78,7 +78,7 @@ enum class EInfectionSeverity : uint8 {
 
 
 UENUM(Blueprintable)
-enum class ESide : uint8
+enum class EBioGearsSide : uint8
 {
 	Left,
 	Right
@@ -86,7 +86,7 @@ enum class ESide : uint8
 
 
 UENUM(Blueprintable)
-enum class EPneumothorax : uint8
+enum class EBioGearsPneumothorax : uint8
 {
 	Open,
 	Closed
@@ -94,7 +94,7 @@ enum class EPneumothorax : uint8
 
 
 UENUM(Blueprintable)
-enum class ETourniquet : uint8 {
+enum class EBioGearsTourniquet : uint8 {
 	Applied,
 	Misapplied,
 	None
@@ -102,7 +102,7 @@ enum class ETourniquet : uint8 {
 
 
 UENUM(Blueprintable)
-enum class EExtremity : uint8 {
+enum class EBioGearsExtremity : uint8 {
 	LeftLeg,
 	RightLeg,
 	LeftArm,
@@ -110,7 +110,7 @@ enum class EExtremity : uint8 {
 };
 
 UENUM(Blueprintable)
-enum class ECompartment : uint8 {
+enum class EBioGearsCompartment : uint8 {
 	LeftLeg,
 	RightLeg,
 	LeftArm,
@@ -118,7 +118,7 @@ enum class ECompartment : uint8 {
 };
 
 UENUM(Blueprintable)
-enum class EUrineColor : uint8 {
+enum class EBioGearsUrineColor : uint8 {
 	PaleYellow,
 	Yellow,
 	DarkYellow,
@@ -126,7 +126,7 @@ enum class EUrineColor : uint8 {
 };
 
 UENUM(Blueprintable)
-enum class EClarityIndicator : uint8 {
+enum class EBioGearsClarityIndicator : uint8 {
 	Clear,
 	SlightlyCloudy,
 	Cloudy,
@@ -134,19 +134,19 @@ enum class EClarityIndicator : uint8 {
 };
 
 UENUM(Blueprintable)
-enum class EPresenceIndicator : uint8 {
+enum class EBioGearsPresenceIndicator : uint8 {
 	Positive,
 	Negitive,
 };
 
 UENUM(Blueprintable)
-enum class EMicroscopicOpservationType : uint8 {
+enum class EBioGearsMicroscopicOpservationType : uint8 {
 	LowPowerField,
 	HighPowerField,
 };
 
 UENUM(Blueprintable)
-enum class EMicroscopicObservationAmount : uint8 {
+enum class EBioGearsMicroscopicObservationAmount : uint8 {
 	Few,
 	Moderate,
 	Many

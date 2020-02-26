@@ -18,9 +18,9 @@
 #include "UBioGearsEngineDriver.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTimeAdvance, float, time_in_simulation_s);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStateUpdated, FBiogearsState, patient_state);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMetricsUpdated, FBiogearsMetrics, patient_metrics);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnConditionsUpdated, FBiogearsConditions, patient_conditions);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStateUpdated, FBioGearsState, patient_state);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMetricsUpdated, FBioGearsMetrics, patient_metrics);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnConditionsUpdated, FBioGearsConditions, patient_conditions);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FRunningToggled, bool, running);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPausedToggled, bool, paused);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FThrottledToggled, bool, throttled);
@@ -70,42 +70,42 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "BioGears::Action::Urinate"))
 		void action_urinate();
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "BioGears::Action::EnvChange"))
-		void action_env_change(FEnvironmentalConditions conditons);
+		void action_env_change(FBioGearsEnvironmentalConditions conditons);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "BioGears::Action::Tourniquet"))
-		void action_apply_tourniquet(EExtremity limb, ETourniquet application);
+		void action_apply_tourniquet(EBioGearsExtremity limb, EBioGearsTourniquet application);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "BioGears::Action::Hemorrhage"))
-		void action_apply_hemorrhage(EExtremity limb, float flowrate_ml_Per_min);
+		void action_apply_hemorrhage(EBioGearsExtremity limb, float flowrate_ml_Per_min);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "BioGears::Action::TensionPneumothorax"))
-		void action_tension_pneumothorax(ESide side, EPneumothorax type, float severity_0_to_1);
+		void action_tension_pneumothorax(EBioGearsSide side, EBioGearsPneumothorax type, float severity_0_to_1);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "BioGears::Action::NeedleD"))
-		void action_needle_decompression(ESide side, bool active);
+		void action_needle_decompression(EBioGearsSide side, bool active);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "BioGears::Action::O2Mask"))
 		void action_o2_mask(float o2_fraction, float o2_volume1, float o2_volume2);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "BioGears::Action::Infection"))
-		void action_infection(EInfectionSeverity severity, FString location, float mic_mg_Per_l);
+		void action_infection(EBioGearsInfectionSeverity severity, FString location, float mic_mg_Per_l);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "BioGears::Action::BloodTransfusion"))
-		void action_bloodtransfusion(EBloodType type, float blood_volume_ml, float flowrate_ml_Per_min);
+		void action_bloodtransfusion(EBioGearsBloodType type, float blood_volume_ml, float flowrate_ml_Per_min);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "BioGears::Action::SubstanceInfusion"))
-		void action_substanceInfusion(EIvSubstance substance, float substance_volume_ml, float flowrate_ml_Per_min);
+		void action_substanceInfusion(EBioGearsIvSubstance substance, float substance_volume_ml, float flowrate_ml_Per_min);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "BioGears::Action::SubstanceCompoundInfusion"))
-		void action_substanceCompoundInfusion(EIvCompound compound, float compound_volume_ml, float flowrate_ml_Per_min);
+		void action_substanceCompoundInfusion(EBioGearsIvCompound compound, float compound_volume_ml, float flowrate_ml_Per_min);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "BioGears::Action::oralSubstanceAdministration"))
-		void action_oralSubstanceAdministration(EOralSubstance type, EOralAbsorption route, float dosage_mg);
+		void action_oralSubstanceAdministration(EBioGearsOralSubstance type, EBioGearsOralAbsorption route, float dosage_mg);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "BioGears::Action::ThermalBlanket"))
 		void action_thermal_blanket(float watt, float surface_area_fraction);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "BioGears::Action::PainStimulus"))
-		void action_pain_stimulus(ECompartment compartment, float severity);
+		void action_pain_stimulus(EBioGearsCompartment compartment, float severity);
 
 	//TODO: I want to play with the concept of managing environments for quick change
     //TODO: If this works I would like to do it with patients, substances and such
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "BioGears::Creation::CreateEnvironment"))
-		bool new_environment(FString key, FEnvironmentalConditions conditions);
+		bool new_environment(FString key, FBioGearsEnvironmentalConditions conditions);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "BioGears::Action::SetEnvironment"))
 		bool set_environment(FString key);
 
 	//TODO: Add Custom Substances to the engine while running (You should never change an existing compound and we will make sure of that)
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "BioGears::Creation::CreateCustomCompound"))
-		bool new_custom_compound(FString key, FBiogearsCompound compound);
+		bool new_custom_compound(FString key, FBioGearsCompound compound);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "BioGears::Action::CustomCompoundInfusion"))
 		bool custom_compound_infusion(FString key, float substance_volume_ml, float flowrate_ml_Per_min);
 
@@ -123,11 +123,11 @@ public:
 	float getSimulationTime();
 
 	UPROPERTY(BlueprintReadOnly, Category = "Data")
-		FBiogearsState patient_state;
+		FBioGearsState patient_state;
 	UPROPERTY(BlueprintReadOnly, Category = "Data")
-		FBiogearsMetrics patient_metrics;
+		FBioGearsMetrics patient_metrics;
 	UPROPERTY(BlueprintReadOnly, Category = "Data")
-		FBiogearsConditions patient_conditions;
+		FBioGearsConditions patient_conditions;
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 		FOnTimeAdvance			 onTimeAdvance;
@@ -154,13 +154,13 @@ public:
 		FOnPulmonaryTextComplete on_pulmonary_test_completed;
 
 	UFUNCTION()
-	void broadcast_urine_analysis_completed(FBiogearsUrineAnalysis analysis);
+	void broadcast_urine_analysis_completed(FBioGearsUrineAnalysis analysis);
 	UFUNCTION()
-	void broadcast_metabolic_panel_completed(FBiogearsMetabolicPanel analysis);
+	void broadcast_metabolic_panel_completed(FBioGearsMetabolicPanel analysis);
 	UFUNCTION()
-	void broadcast_blood_count_completed(FBiogearsBloodCount analysis);
+	void broadcast_blood_count_completed(FBioGearsBloodCount analysis);
 	UFUNCTION()
-	void broadcast_pulmonary_test_completed(FBiogearsPulmonaryTest analysis);
+	void broadcast_pulmonary_test_completed(FBioGearsPulmonaryTest analysis);
 	
 	//Destructor Functions
 	void BeginDestroy() override;

@@ -22,27 +22,27 @@ void UBioGearsEngineDriver::action_urinate()
 	_action_source->insert([&]() { return _engine->action_urinate(); });
 }
 //-------------------------------------------------------------------------------
-void UBioGearsEngineDriver::action_env_change(FEnvironmentalConditions conditons)
+void UBioGearsEngineDriver::action_env_change(FBioGearsEnvironmentalConditions conditons)
 {
 	return;
 }
 //-------------------------------------------------------------------------------
-void UBioGearsEngineDriver::action_apply_tourniquet(EExtremity limb, ETourniquet application)
+void UBioGearsEngineDriver::action_apply_tourniquet(EBioGearsExtremity limb, EBioGearsTourniquet application)
 {
 	_action_source->insert([&, limb, application]() { return _engine->action_apply_tourniquet(limb, application); });
 }
 //-------------------------------------------------------------------------------
-void UBioGearsEngineDriver::action_apply_hemorrhage(EExtremity limb, float flowrate_ml_Per_min)
+void UBioGearsEngineDriver::action_apply_hemorrhage(EBioGearsExtremity limb, float flowrate_ml_Per_min)
 {
 	_action_source->insert([&, limb, flowrate_ml_Per_min]() { return _engine->action_apply_hemorrhage(limb, flowrate_ml_Per_min); });
 }
 //-------------------------------------------------------------------------------
-void UBioGearsEngineDriver::action_tension_pneumothorax(ESide side, EPneumothorax type, float severity_0_to_1)
+void UBioGearsEngineDriver::action_tension_pneumothorax(EBioGearsSide side, EBioGearsPneumothorax type, float severity_0_to_1)
 {
 	_action_source->insert([&, side, type, severity_0_to_1]() { return _engine->action_tension_pneumothorax(side, type, severity_0_to_1); });
 }
 //-------------------------------------------------------------------------------
-void UBioGearsEngineDriver::action_needle_decompression(ESide side, bool active)
+void UBioGearsEngineDriver::action_needle_decompression(EBioGearsSide side, bool active)
 {
 	_action_source->insert([&, side, active]() { return _engine->action_needle_decompression(side, active); });
 }
@@ -52,27 +52,27 @@ void UBioGearsEngineDriver::action_o2_mask(float o2_fraction, float o2_volume1, 
 	_action_source->insert([&, o2_fraction, o2_volume1, o2_volume2]() { return _engine->action_o2_mask(o2_fraction, o2_volume1, o2_volume2); });
 }
 //-------------------------------------------------------------------------------
-void UBioGearsEngineDriver::action_infection(EInfectionSeverity severity, FString location, float mic_mg_Per_l)
+void UBioGearsEngineDriver::action_infection(EBioGearsInfectionSeverity severity, FString location, float mic_mg_Per_l)
 {
 	_action_source->insert([&, severity, location, mic_mg_Per_l]() { return _engine->action_infection(severity, location, mic_mg_Per_l); });
 }
 //-------------------------------------------------------------------------------
-void UBioGearsEngineDriver::action_bloodtransfusion(EBloodType type, float blood_volume_ml, float flowrate_ml_Per_min)
+void UBioGearsEngineDriver::action_bloodtransfusion(EBioGearsBloodType type, float blood_volume_ml, float flowrate_ml_Per_min)
 {
 	_action_source->insert([&, type, blood_volume_ml, flowrate_ml_Per_min]() { return _engine->action_bloodtransfusion(type, blood_volume_ml, flowrate_ml_Per_min); });
 }
 //-------------------------------------------------------------------------------
-void UBioGearsEngineDriver::action_substanceInfusion(EIvSubstance substance, float bag_volume_ml, float flowrate_ml_Per_min)
+void UBioGearsEngineDriver::action_substanceInfusion(EBioGearsIvSubstance substance, float bag_volume_ml, float flowrate_ml_Per_min)
 {
 	_action_source->insert([&, substance, bag_volume_ml, flowrate_ml_Per_min]() { return _engine->action_substanceInfusion(substance, bag_volume_ml, flowrate_ml_Per_min); });
 }
 //-------------------------------------------------------------------------------
-void UBioGearsEngineDriver::action_substanceCompoundInfusion(EIvCompound compound, float bag_volume_ml, float flowrate_ml_Per_min)
+void UBioGearsEngineDriver::action_substanceCompoundInfusion(EBioGearsIvCompound compound, float bag_volume_ml, float flowrate_ml_Per_min)
 {
 	_action_source->insert([&, compound, bag_volume_ml, flowrate_ml_Per_min]() { return _engine->action_substanceCompoundInfusion(compound, bag_volume_ml, flowrate_ml_Per_min); });
 }
 //-------------------------------------------------------------------------------
-void UBioGearsEngineDriver::action_oralSubstanceAdministration(EOralSubstance type, EOralAbsorption route, float dosage_mg)
+void UBioGearsEngineDriver::action_oralSubstanceAdministration(EBioGearsOralSubstance type, EBioGearsOralAbsorption route, float dosage_mg)
 {
 	_action_source->insert([&, type, route, dosage_mg]() { return _engine->action_oralSubstanceAdministration(type, route, dosage_mg); });
 }
@@ -82,7 +82,7 @@ void UBioGearsEngineDriver::action_thermal_blanket(float watt, float surface_are
 	_action_source->insert([&, watt, surface_area_fraction]() { return _engine->action_thermal_blanket(watt, surface_area_fraction); });
 }
 //-------------------------------------------------------------------------------
-void UBioGearsEngineDriver::action_pain_stimulus(ECompartment compartment, float severity)
+void UBioGearsEngineDriver::action_pain_stimulus(EBioGearsCompartment compartment, float severity)
 {
 	_action_source->insert([&, compartment, severity]() { return _engine->action_pain_stimulus(compartment, severity); });
 }
@@ -165,11 +165,11 @@ UBioGearsEngineDriver::UBioGearsEngineDriver(const FObjectInitializer& ObjectIni
 //-------------------------------------------------------------------------------
 void UBioGearsEngineDriver::initialize_here(FString name, UObject* parent)
 {
-	FString biogearsContentPath = FString::Printf(TEXT("BioGears/%d.%d.%d"), ::biogears::biogears_major_version()
+	FString biogearsContentPath = FString::Printf(TEXT("%d.%d.%d"), ::biogears::biogears_major_version()
 		, ::biogears::biogears_minor_version()
 		, ::biogears::biogears_patch_version());
 
-	FString biogearsContentDir = FPaths::Combine(FPaths::ProjectDir(), TEXT("Plugins"), TEXT("Content"), biogearsContentPath);
+	const FString biogearsContentDir = FPaths::Combine(FPaths::ProjectDir(), TEXT("Plugins"), TEXT("BioGears"), TEXT("Content"), biogearsContentPath);
 
 	this->_action_source = MakeUnique<Source>(_action_queue.as_source());
 
@@ -308,22 +308,22 @@ float UBioGearsEngineDriver::getSimulationTime()
 	return _engine->getSimulationTime();
 }
 //-------------------------------------------------------------------------------
-void UBioGearsEngineDriver::broadcast_urine_analysis_completed(FBiogearsUrineAnalysis analysis)
+void UBioGearsEngineDriver::broadcast_urine_analysis_completed(FBioGearsUrineAnalysis analysis)
 {
 	on_urine_analysis_completed.Broadcast(analysis);
 }
 //-------------------------------------------------------------------------------
-void UBioGearsEngineDriver::broadcast_metabolic_panel_completed(FBiogearsMetabolicPanel analysis)
+void UBioGearsEngineDriver::broadcast_metabolic_panel_completed(FBioGearsMetabolicPanel analysis)
 {
 	on_metabolic_panel_completed.Broadcast(analysis);
 }
 //-------------------------------------------------------------------------------
-void UBioGearsEngineDriver::broadcast_blood_count_completed(FBiogearsBloodCount analysis)
+void UBioGearsEngineDriver::broadcast_blood_count_completed(FBioGearsBloodCount analysis)
 {
 	on_blood_count_completed.Broadcast(analysis);
 }
 //-------------------------------------------------------------------------------
-void UBioGearsEngineDriver::broadcast_pulmonary_test_completed(FBiogearsPulmonaryTest analysis)
+void UBioGearsEngineDriver::broadcast_pulmonary_test_completed(FBioGearsPulmonaryTest analysis)
 {
 	on_pulmonary_test_completed.Broadcast(analysis);
 }
@@ -351,7 +351,7 @@ void UBioGearsEngineDriver::FinishDestroy()
 	Super::FinishDestroy();
 }
 //-------------------------------------------------------------------------------
-bool UBioGearsEngineDriver::new_environment(FString key, FEnvironmentalConditions conditions)
+bool UBioGearsEngineDriver::new_environment(FString key, FBioGearsEnvironmentalConditions conditions)
 {
 	UE_LOG(BioGearsLog, Warning, TEXT("Environments are currently not supported"));
 	return false;
@@ -363,7 +363,7 @@ bool UBioGearsEngineDriver::set_environment(FString key)
 	return false;
 }
 //-------------------------------------------------------------------------------
-bool UBioGearsEngineDriver::new_custom_compound(FString key, FBiogearsCompound compound)
+bool UBioGearsEngineDriver::new_custom_compound(FString key, FBioGearsCompound compound)
 {
 	UE_LOG(BioGearsLog, Warning, TEXT("Custom compound are currently not supported"));
 	return false;

@@ -5,6 +5,7 @@
 
 #include <Misc/Paths.h>
 #include <Templates/UniquePtr.h>
+#include <UObject/Object.h>
 
 
 #include "UBioGearsLogger.h"
@@ -25,10 +26,10 @@
 
 #include "UUE4BioGearsEngine.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUrineAnalysisComplete , FBiogearsUrineAnalysis, results);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMetabolicPanelComplete, FBiogearsMetabolicPanel, results);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBloodCountComplete    , FBiogearsBloodCount, results);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPulmonaryTextComplete , FBiogearsPulmonaryTest, results);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUrineAnalysisComplete , FBioGearsUrineAnalysis, results);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMetabolicPanelComplete, FBioGearsMetabolicPanel, results);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBloodCountComplete    , FBioGearsBloodCount, results);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPulmonaryTextComplete , FBioGearsPulmonaryTest, results);
 
 
 UCLASS(BlueprintType, Config = "BioGears", meta = (DisplayName = "BioGearsEngine"))
@@ -37,11 +38,11 @@ class BIOGEARSENGINE_API UUE4BioGearsEngine : public UObject {
 public:
 	UUE4BioGearsEngine();
 
-	UFUNCTION(BlueprintCallable, Category = "Physiology", meta = (DisplayName = "Physiology::GetSimulationTime"))
+	UFUNCTION(BlueprintCallable, Category = "Physiology", meta = (DisplayName = "Physiology::InitializeHere"))
 	void initialize_here(FString name);
-	UFUNCTION(BlueprintCallable, Category = "Physiology", meta = (DisplayName = "Physiology::GetSimulationTime"))
+	UFUNCTION(BlueprintCallable, Category = "Physiology", meta = (DisplayName = "Physiology::InitializeWithPath"))
 	void initialize_with_path(FString dataRoot, FString name);
-	UFUNCTION(BlueprintCallable, Category = "Physiology", meta = (DisplayName = "Physiology::GetSimulationTime"))
+	UFUNCTION(BlueprintCallable, Category = "Physiology", meta = (DisplayName = "Physiology::InitializeWithLogger"))
 	void initialize_with_logger(FString dataRoot, UBioGearsLogger* logger);
 
 	~UUE4BioGearsEngine() override;
@@ -50,11 +51,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Physiology", meta = (DisplayName = "Physiology::GetSimulationTime"))
 	float getSimulationTime() const;
 	UFUNCTION(BlueprintCallable, Category = "Physiology", meta = (DisplayName = "Physiology::GetMetrics"))
-	FBiogearsMetrics    getMetrics() const;
+	FBioGearsMetrics    getMetrics() const;
 	UFUNCTION(BlueprintCallable, Category = "Physiology", meta = (DisplayName = "Physiology::GetConditions"))
-	FBiogearsConditions getConditions() const;
+	FBioGearsConditions getConditions() const;
 	UFUNCTION(BlueprintCallable, Category = "Physiology", meta = (DisplayName = "Physiology::GetState"))
-	FBiogearsState      getState() const;
+	FBioGearsState      getState() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Control", meta = (DisplayName = "Physiology::LoadPatient"))
 	bool load_patient(FString patient);
@@ -71,31 +72,31 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "Physiology::Action::Urinate"))
 	bool action_urinate();
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "Physiology::Action::EnvironmentChange"))
-	bool action_env_change(FEnvironmentalConditions conditons);
+	bool action_env_change(FBioGearsEnvironmentalConditions conditons);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "Physiology::Action::Tourniquet"))
-	bool action_apply_tourniquet(EExtremity limb, ETourniquet application);
+	bool action_apply_tourniquet(EBioGearsExtremity limb, EBioGearsTourniquet application);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "Physiology::Action::Hemorrhage"))
-	bool action_apply_hemorrhage(EExtremity limb, float flowrate_ml_Per_min);
+	bool action_apply_hemorrhage(EBioGearsExtremity limb, float flowrate_ml_Per_min);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "Physiology::Action::TensionPnuemothorax"))
-	bool action_tension_pneumothorax(ESide side , EPneumothorax type, float severity_0_to_1);
+	bool action_tension_pneumothorax(EBioGearsSide side , EBioGearsPneumothorax type, float severity_0_to_1);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "Physiology::Action::NeedleDecompression"))
-	bool action_needle_decompression(ESide side, bool active);
+	bool action_needle_decompression(EBioGearsSide side, bool active);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "Physiology::Action::O2Mask"))
 	bool action_o2_mask(float o2_fraction, float o2_volume1, float o2_volume2);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "Physiology::Action::ActionInfection"))
-	bool action_infection(EInfectionSeverity severity, FString location, float mic_mg_Per_l);
+	bool action_infection(EBioGearsInfectionSeverity severity, FString location, float mic_mg_Per_l);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "Physiology::Action::BloodTransfusion"))
-	bool action_bloodtransfusion(EBloodType type, float blood_volume_ml, float flowrate_ml_Per_min);
+	bool action_bloodtransfusion(EBioGearsBloodType type, float blood_volume_ml, float flowrate_ml_Per_min);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "Physiology::Action::ThermalBlanket"))
 	bool action_thermal_blanket(float watt, float surface_area_fraction);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "Physiology::Action::PainStimulus"))
-	bool action_pain_stimulus(ECompartment compartment, float severity);
+	bool action_pain_stimulus(EBioGearsCompartment compartment, float severity);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "Physiology::Action::SubstanceInfusion"))
-	bool action_substanceInfusion(EIvSubstance substance, float substance_volume_ml, float flowrate_ml_Per_min);
+	bool action_substanceInfusion(EBioGearsIvSubstance substance, float substance_volume_ml, float flowrate_ml_Per_min);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "Physiology::Action::SubstanceCompoundInfusion"))
-	bool action_substanceCompoundInfusion(EIvCompound compound, float compound_volume_ml, float flowrate_ml_Per_min);
+	bool action_substanceCompoundInfusion(EBioGearsIvCompound compound, float compound_volume_ml, float flowrate_ml_Per_min);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Action", meta = (DisplayName = "Physiology::Action::OralSubstanceAdministration"))
-	bool action_oralSubstanceAdministration(EOralSubstance type, EOralAbsorption route, float dosage_mg);
+	bool action_oralSubstanceAdministration(EBioGearsOralSubstance type, EBioGearsOralAbsorption route, float dosage_mg);
 	
 	//Query Actions
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "Physiology::Panel::UrineAnalyis"))
@@ -110,14 +111,14 @@ public:
 
 	//TODO: I want to play with the concept of managing environments for quick change
 	//TODO: If this works I would like to do it with patients, substances and such
-	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "Physiology::EnvirEnvironmentoment::Create"))
-	bool new_environment(FString key, FEnvironmentalConditions conditions);
+	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "Physiology::Environment::Create"))
+	bool new_environment(FString key, FBioGearsEnvironmentalConditions conditions);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "Physiology::Environment::Set"))
 	bool set_environment(FString key);
 
 	//TODO: Add Custom Substances to the engine while running (You should never change an existing compound and we will make sure of that)
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "Physiology::CustomCompound::Create"))
-		bool new_custom_compound(FString key, FBiogearsCompound compound);
+		bool new_custom_compound(FString key, FBioGearsCompound compound);
 	UFUNCTION(BlueprintCallable, Category = "Physiology|Panel", meta = (DisplayName = "Physiology::CustomCompoun::Infusion"))
 		bool custom_compound_infusion(FString key, float substance_volume_ml, float flowrate_ml_Per_min);
 	
@@ -147,9 +148,9 @@ private:
 		std::string _log_root;
 		std::string _data_root;
 
-		FBiogearsMetrics _metrics;
-		FBiogearsConditions _conditions;
-		FBiogearsState _state;
+		FBioGearsMetrics _metrics;
+		FBioGearsConditions _conditions;
+		FBioGearsState _state;
 
 		std::atomic_bool _ready{ false };
 
