@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- steps to add to build additions -->
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+	<!-- init section is always evaluated once per architecture -->
+	<init>
+		<setBool result="bSupported" value="false"/>
+		<isArch arch="armeabi-v7a">
+			<setBool result="bSupported" value="true"/>
+		</isArch>
+	</init>
+
+	<!-- optional files or directories to copy to Intermediate/Android/APK -->
+	<resourceCopies>
+		<!-- <isArch arch="armeabi-v7a"> -->
+		<log text="Copying libbiogears.so"/>
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libbiogears.so" dst="$S(BuildDir)/libs/armeabi-v7a/libbiogears.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libbiogears_cdm.so" dst="$S(BuildDir)/libs/armeabi-v7a/libbiogears_cdm.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libbiogears_circuit_test.so" dst="$S(BuildDir)/libs/armeabi-v7a/libbiogears_circuit_test.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_atomic.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_atomic.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_chrono.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_chrono.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_container.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_container.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_date_time.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_date_time.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_filesystem.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_filesystem.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_graph.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_graph.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_iostreams.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_iostreams.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_log.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_log.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_log_setup.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_log_setup.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_math_c99.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_math_c99.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_math_c99f.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_math_c99f.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_math_c99l.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_math_c99l.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_math_tr1.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_math_tr1.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_math_tr1f.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_math_tr1f.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_math_tr1l.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_math_tr1l.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_prg_exec_monitor.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_prg_exec_monitor.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_program_options.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_program_options.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_random.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_random.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_regex.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_regex.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_serialization.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_serialization.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_signals.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_signals.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_stacktrace_basic.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_stacktrace_basic.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_stacktrace_noop.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_stacktrace_noop.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_system.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_system.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_thread.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_thread.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_timer.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_timer.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_type_erasure.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_type_erasure.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_unit_test_framework.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_unit_test_framework.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_wave.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_wave.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libboost_wserialization.so" dst="$S(BuildDir)/libs/armeabi-v7a/libboost_wserialization.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libcharset.so" dst="$S(BuildDir)/libs/armeabi-v7a/libcharset.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libiconv.so" dst="$S(BuildDir)/libs/armeabi-v7a/libiconv.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libLog4cpp.so" dst="$S(BuildDir)/libs/armeabi-v7a/libLog4cpp.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libxerces-c.so" dst="$S(BuildDir)/libs/armeabi-v7a/libxerces-c.so" />
+			<copyFile src="$S(PluginDir)/../../ThirdParty/BioGears/lib/aarch64/Release/libxerces-c-3.2.so" dst="$S(BuildDir)/libs/armeabi-v7a/libxerces-c-3.2.so" />
+		<!-- </isArch> -->
+	</resourceCopies>
+
+	<!-- optional libraries to load in GameActivity.java before libUE4.so -->
+	<soLoadLibrary>
+		<!-- <if condition="bSupported"> -->
+			<!-- <true> -->
+				<loadLibrary name="biogears" failmsg="ERROR ANDROID: failed to load biogears library" />
+			<!--</true> -->
+		<!-- </if> -->
+	</soLoadLibrary>
+</root>
