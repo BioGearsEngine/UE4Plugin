@@ -1,7 +1,5 @@
-**Binaries/
-**Intermediate/
-**.exe
-**cmd_bio
-**scenario_driver
-**test_driver
-**/Content/7.3.0
+BatchFiles/
+Binaries/
+Intermediate/
+worktree/
+VH_BioGears.7z

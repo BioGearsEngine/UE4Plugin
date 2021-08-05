@@ -1,0 +1,24 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "Virtual Heroes BioGears",
+	"Description": "Integration of BioGears physiology engine.",
+	"Category": "Virtual Heroes",
+	"CreatedBy": "Applied Research Associates / Virtual Heroes Division",
+	"CreatedByURL": "www.virtualheroes.com",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"Installed": true,
+	"EnabledByDefault": true,
+	"Modules": [
+		{
+			"Name": "VH_BioGears",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
