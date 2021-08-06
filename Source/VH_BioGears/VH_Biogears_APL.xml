@@ -2,20 +2,21 @@
 <!-- steps to add to build additions -->
 <root
   xmlns:android="http://schemas.android.com/apk/res/android">
-  <!-- init section is always evaluated once per architecture -->
-  <init>
-    <setBool result="bSupported" value="false"/>
-    <isArch arch="armeabi-v7a">
-      <setBool result="bSupported" value="true"/>
-      <setBool result="bBundle-armeabi" value="true"/>
-    </isArch>
-    <isArch arch="arm64-v8a">
-      <setBool result="bSupported" value="true"/>
-      <setBool result="bBundle-arm64" value="true"/>
-    </isArch>
-  </init>
+	<!-- init section is always evaluated once per architecture -->
+	<trace enable="true"/>
+	<init>
+		<setBool result="bSupported" value="false"/>
+		<isArch arch=" $S(Architecture)">
+			<setBool result="bSupported" value="true"/>
+			<setBool result="bBundle-armeabi" value="true"/>
+		</isArch>
+		<isArch arch="arm64-v8a">
+			<setBool result="bSupported" value="true"/>
+			<setBool result="bBundle-arm64" value="true"/>
+		</isArch>
+	</init>
 
-<!---
+	<!---
 UPL Supports the following 
 
 Bool, Int, and String variable types are supported. Any attribute may reference a variable and will be replaced with the string equivalent before evaluation using this syntax: 
@@ -36,113 +37,124 @@ $B(Distribution) = true if distribution build
 -->
 
 
-<!-- init section is always evaluated once per architecture -->
-<init> </init>
-<!--  optional updates applied to AndroidManifest.xml -->
-<androidManifestUpdates> </androidManifestUpdates>
-<!--  optional additions to proguard -->
-<proguardAdditions>    </proguardAdditions>
-<!--  optional AAR imports additions -->
-<AARImports> </AARImports>
-    <!--  optional base build.gradle additions -->
-<baseBuildGradleAdditions>  </baseBuildGradleAdditions>
-    <!--  optional base build.gradle buildscript additions -->
-<buildscriptGradleAdditions>  </buildscriptGradleAdditions>
-    <!--  optional app build.gradle additions -->
-<buildGradleAdditions>  </buildGradleAdditions>
-    <!--  optional additions to generated build.xml before ${sdk.dir}/tools/ant/build.xml import -->
-<buildXmlPropertyAdditions> </buildXmlPropertyAdditions>
-    <!--  optional files or directories to copy or delete from Intermediate/Android/APK before ndk-build -->
-<prebuildCopies> 
+	<!-- init section is always evaluated once per architecture -->
+	<init> </init>
+	<!--  optional updates applied to AndroidManifest.xml -->
+	<androidManifestUpdates> </androidManifestUpdates>
+	<!--  optional additions to proguard -->
+	<proguardAdditions>    </proguardAdditions>
+	<!--  optional AAR imports additions -->
+	<AARImports> </AARImports>
+	<!--  optional base build.gradle additions -->
+	<baseBuildGradleAdditions>  </baseBuildGradleAdditions>
+	<!--  optional base build.gradle buildscript additions -->
+	<buildscriptGradleAdditions>  </buildscriptGradleAdditions>
+	<!--  optional app build.gradle additions -->
+	<buildGradleAdditions>  </buildGradleAdditions>
+	<!--  optional additions to generated build.xml before ${sdk.dir}/tools/ant/build.xml import -->
+	<buildXmlPropertyAdditions> </buildXmlPropertyAdditions>
+	<!--  optional files or directories to copy or delete from Intermediate/Android/APK before ndk-build -->
+	<prebuildCopies>
 
-</prebuildCopies>
-    <!-- optional files or directories to copy or delete from Intermediate/Android/APK after ndk-build -->
-<resourceCopies>
-<log text="Value of Architecture set to $S(Architecture)"/>
-<log text="Value of PluginDir set to $S(PluginDir)"/>
-<log text="Value of EngineDir set to $S(EngineDir) "/>
-<log text="Value of BuildDir set to $S(BuildDir)"/> 
+	</prebuildCopies>
+	<!-- optional files or directories to copy or delete from Intermediate/Android/APK after ndk-build -->
+	<resourceCopies>
+		<log text="Value of Architecture set to $S(Architecture)"/>
+		<log text="Value of PluginDir set to $S(PluginDir)"/>
+		<log text="Value of EngineDir set to $S(EngineDir) "/>
+		<log text="Value of BuildDir set to $S(BuildDir)"/>
+		<log text="Value of Configuration is $S(Configuration)"/>
 
-  <isArch arch="armeabi-v7a">
-    <!-- <setBool  result="bSupported" value="true"/> -->
-    <!-- optional files or directories to copy to Intermediate/Android/APK -->
-      <log text="Copying $S(Architecture) Thirdparty Libraries"/>
-      <copyFile src="$S(PluginDir)/../../Binaries/Android/armeabi-v7a/libicudata.so" dst="$S(BuildDir)/libs/armeabi-v7a/libicudata.so" force="true"/>
-      <copyFile src="$S(PluginDir)/../../Binaries/Android/armeabi-v7a/libicui18n.so" dst="$S(BuildDir)/libs/armeabi-v7a/libicui18n.so" force="true"/>
-      <copyFile src="$S(PluginDir)/../../Binaries/Android/armeabi-v7a/libicuio.so" dst="$S(BuildDir)/libs/armeabi-v7a/libicuio.so" force="true"/>
-      <copyFile src="$S(PluginDir)/../../Binaries/Android/armeabi-v7a/libicutu.so" dst="$S(BuildDir)/libs/armeabi-v7a/libicutu.so" force="true"/>
-      <copyFile src="$S(PluginDir)/../../Binaries/Android/armeabi-v7a/libicuuc.so" dst="$S(BuildDir)/libs/armeabi-v7a/libicuuc.so" force="true"/>
-      <copyFile src="$S(PluginDir)/../../Binaries/Android/armeabi-v7a/libxerces-c-3.2.so" dst="$S(BuildDir)/libs/armeabi-v7a/libxerces-c-3.2.so" force="true"/>
-      <copyFile src="$S(PluginDir)/../../Binaries/Android/armeabi-v7a/libbiogears_common.so" dst="$S(BuildDir)/libs/armeabi-v7a/libbiogears_common.so" force="true"/>
-      <copyFile src="$S(PluginDir)/../../Binaries/Android/armeabi-v7a/libbiogears_io.so" dst="$S(BuildDir)/libs/armeabi-v7a/libbiogears_io.so" force="true"/>
-      <copyFile src="$S(PluginDir)/../../Binaries/Android/armeabi-v7a/libbiogears_cdm.so" dst="$S(BuildDir)/libs/armeabi-v7a/libbiogears_cdm.so" force="true"/>
-      <copyFile src="$S(PluginDir)/../../Binaries/Android/armeabi-v7a/libbiogears.so" dst="$S(BuildDir)/libs/armeabi-v7a/libbiogears.so" force="true"/>
-  </isArch>
+		<setBoolEquals result="isDebug" arg1="$S(Configuration)" arg2="Debug"/>
+		<setStringFromEnvVar result="config" value="rel"/>
+		<if condition="isDebug">
+			<true>
+				<setStringFromEnvVar result="config" value="dbg"/>
+			</true>
+		</if>
+		<setBoolEquals result="isDebugGame" arg1="$S(Configuration)" arg2="Game"/>
+		<if condition="isDebugGame">
+			<true>
+				<setStringFromEnvVar result="config" value="dbg"/>
+			</true>
+		</if>
+		<setBoolEquals result="isDevelopment" arg1="$S(Configuration)" arg2="Development"/>
+		<if condition="isDevelopment">
+			<true>
+				<setStringFromEnvVar result="config" value="dbg"/>
+			</true>
+		</if>
 
-  <isArch arch="arm64-v8a">
-      <log text="Copying $S(Architecture) Thirdparty Libraries"/>
-      <copyFile src="$S(PluginDir)/../../Binaries/Android/arm64-v8a/libicudata.so" dst="$S(BuildDir)/libs/arm64-v8a/libicudata.so" force="true"/>
-      <copyFile src="$S(PluginDir)/../../Binaries/Android/arm64-v8a/libicui18n.so" dst="$S(BuildDir)/libs/arm64-v8a/libicui18n.so" force="true"/>
-      <copyFile src="$S(PluginDir)/../../Binaries/Android/arm64-v8a/libicuio.so" dst="$S(BuildDir)/libs/arm64-v8a/libicuio.so" force="true"/>
-      <copyFile src="$S(PluginDir)/../../Binaries/Android/arm64-v8a/libicutu.so" dst="$S(BuildDir)/libs/arm64-v8a/libicutu.so" force="true"/>
-      <copyFile src="$S(PluginDir)/../../Binaries/Android/arm64-v8a/libicuuc.so" dst="$S(BuildDir)/libs/arm64-v8a/libicuuc.so" force="true"/>
-      <copyFile src="$S(PluginDir)/../../Binaries/Android/arm64-v8a/libxerces-c-3.2.so" dst="$S(BuildDir)/libs/arm64-v8a/libxerces-c-3.2.so" force="true"/>
-      <copyFile src="$S(PluginDir)/../../Binaries/Android/arm64-v8a/libbiogears_common.so" dst="$S(BuildDir)/libs/arm64-v8a/libbiogears_common.so" force="true"/>
-      <copyFile src="$S(PluginDir)/../../Binaries/Android/arm64-v8a/libbiogears_io.so" dst="$S(BuildDir)/libs/arm64-v8a/libbiogears_io.so" force="true"/>
-      <copyFile src="$S(PluginDir)/../../Binaries/Android/arm64-v8a/libbiogears_cdm.so" dst="$S(BuildDir)/libs/arm64-v8a/libbiogears_cdm.so" force="true"/>
-      <copyFile src="$S(PluginDir)/../../Binaries/Android/arm64-v8a/libbiogears.so" dst="$S(BuildDir)/libs/arm64-v8a/libbiogears.so" force="true"/>
-  </isArch>
-  
-</resourceCopies>
-    <!-- optional files or directories to copy or delete from Intermediate/Android/APK before Gradle -->
-  
-<gradleCopies> </gradleCopies>
-    <!-- optional properties to add to gradle.properties -->
-<gradleProperties> </gradleProperties>
-    <!-- optional parameters to add to Gradle commandline (prefix with a space or will run into previous parameter(s)) -->
-<gradleParameters> </gradleParameters>
-    <!-- optional minimum SDK API level required -->
-<minimumSDKAPI> </minimumSDKAPI>
-    <!-- optional additions to the GameActivity imports in GameActivity.java -->
-<gameActivityImportAdditions> </gameActivityImportAdditions>
-   <!-- optional additions to the GameActivity after imports in GameActivity.java -->
-<gameActivityPostImportAdditions> </gameActivityPostImportAdditions>
-    <!-- optional additions to the GameActivity class implements in GameActivity.java (end each line with a comma) -->
-<gameActivityImplementsAdditions> </gameActivityImplementsAdditions>
-    <!-- optional additions to the GameActivity class body in GameActivity.java -->
-<gameActivityClassAdditions> </gameActivityClassAdditions>
-    <!-- optional additions to GameActivity onCreate metadata reading in GameActivity.java -->
-<gameActivityReadMetadata> </gameActivityReadMetadata>
-    <!-- optional additions to GameActivity onCreate in GameActivity.java -->
-<gameActivityOnCreateAdditions> </gameActivityOnCreateAdditions>
-    <!-- optional additions to GameActivity onDestroy in GameActivity.java -->
-<gameActivityOnDestroyAdditions> </gameActivityOnDestroyAdditions>
-    <!-- optional additions to GameActivity onStart in GameActivity.java -->
-<gameActivityOnStartAdditions> </gameActivityOnStartAdditions>
-    <!-- optional additions to GameActivity onStop in GameActivity.java -->
-<gameActivityOnStopAdditions> </gameActivityOnStopAdditions>
-    <!-- optional additions to GameActivity onPause in GameActivity.java -->
-<gameActivityOnPauseAdditions> </gameActivityOnPauseAdditions>
-    <!-- optional additions to GameActivity onResume in GameActivity.java -->
-<gameActivityOnResumeAdditions>    </gameActivityOnResumeAdditions>
-    <!-- optional additions to GameActivity onNewIntent in GameActivity.java -->
-<gameActivityOnNewIntentAdditions> </gameActivityOnNewIntentAdditions>
-    <!-- optional additions to GameActivity onActivityResult in GameActivity.java -->
-<gameActivityOnActivityResultAdditions>    </gameActivityOnActivityResultAdditions>
+		<!-- <setBool  result="bSupported" value="true"/> -->
+		<!-- optional files or directories to copy to Intermediate/Android/APK -->
+		<log text="Copying $S(Architecture) Thirdparty Libraries"/>
+		<copyFile src="$S(EngineDir)/../Thirdparty/Artifacts/Android/$S(Architecture)/$S(config)/lib/libicudata.so" dst="$S(BuildDir)/libs/$S(Architecture)/libicudata.so" force="true"/>
+		<copyFile src="$S(EngineDir)/../Thirdparty/Artifacts/Android/$S(Architecture)/$S(config)/lib/libicui18n.so" dst="$S(BuildDir)/libs/$S(Architecture)/libicui18n.so" force="true"/>
+		<copyFile src="$S(EngineDir)/../Thirdparty/Artifacts/Android/$S(Architecture)/$S(config)/lib/libicuio.so" dst="$S(BuildDir)/libs/$S(Architecture)/libicuio.so" force="true"/>
+		<copyFile src="$S(EngineDir)/../Thirdparty/Artifacts/Android/$S(Architecture)/$S(config)/lib/libicutu.so" dst="$S(BuildDir)/libs/$S(Architecture)/libicutu.so" force="true"/>
+		<copyFile src="$S(EngineDir)/../Thirdparty/Artifacts/Android/$S(Architecture)/$S(config)/lib/libicuuc.so" dst="$S(BuildDir)/libs/$S(Architecture)/libicuuc.so" force="true"/>
+		<copyFile src="$S(EngineDir)/../Thirdparty/Artifacts/Android/$S(Architecture)/$S(config)/lib/libxerces-c-3.2.so" dst="$S(BuildDir)/libs/$S(Architecture)/libxerces-c-3.2.so" force="true"/>
+		<copyFile src="$S(EngineDir)/../Thirdparty/Artifacts/Android/$S(Architecture)/$S(config)/lib/libbiogears_common.so" dst="$S(BuildDir)/libs/$S(Architecture)/libbiogears_common.so" force="true"/>
+		<copyFile src="$S(EngineDir)/../Thirdparty/Artifacts/Android/$S(Architecture)/$S(config)/lib/libbiogears_io.so" dst="$S(BuildDir)/libs/$S(Architecture)/libbiogears_io.so" force="true"/>
+		<copyFile src="$S(EngineDir)/../Thirdparty/Artifacts/Android/$S(Architecture)/$S(config)/lib/libbiogears_cdm.so" dst="$S(BuildDir)/libs/$S(Architecture)/libbiogears_cdm.so" force="true"/>
+		<copyFile src="$S(EngineDir)/../Thirdparty/Artifacts/Android/$S(Architecture)/$S(config)/lib/libbiogears.so" dst="$S(BuildDir)/libs/$S(Architecture)/libbiogears.so" force="true"/>
+	</resourceCopies>
+	<!-- optional files or directories to copy or delete from Intermediate/Android/APK before Gradle -->
+
+	<gradleCopies> </gradleCopies>
+	<!-- optional properties to add to gradle.properties -->
+	<gradleProperties> </gradleProperties>
+	<!-- optional parameters to add to Gradle commandline (prefix with a space or will run into previous parameter(s)) -->
+	<gradleParameters> </gradleParameters>
+	<!-- optional minimum SDK API level required -->
+	<minimumSDKAPI> </minimumSDKAPI>
+	<!-- optional additions to the GameActivity imports in GameActivity.java -->
+	<gameActivityImportAdditions> </gameActivityImportAdditions>
+	<!-- optional additions to the GameActivity after imports in GameActivity.java -->
+	<gameActivityPostImportAdditions> </gameActivityPostImportAdditions>
+	<!-- optional additions to the GameActivity class implements in GameActivity.java (end each line with a comma) -->
+	<gameActivityImplementsAdditions> </gameActivityImplementsAdditions>
+	<!-- optional additions to the GameActivity class body in GameActivity.java -->
+	<gameActivityClassAdditions> </gameActivityClassAdditions>
+	<!-- optional additions to GameActivity onCreate metadata reading in GameActivity.java -->
+	<gameActivityReadMetadata> </gameActivityReadMetadata>
+	<!-- optional additions to GameActivity onCreate in GameActivity.java -->
+	<gameActivityOnCreateAdditions> </gameActivityOnCreateAdditions>
+	<!-- optional additions to GameActivity onDestroy in GameActivity.java -->
+	<gameActivityOnDestroyAdditions> </gameActivityOnDestroyAdditions>
+	<!-- optional additions to GameActivity onStart in GameActivity.java -->
+	<gameActivityOnStartAdditions> </gameActivityOnStartAdditions>
+	<!-- optional additions to GameActivity onStop in GameActivity.java -->
+	<gameActivityOnStopAdditions> </gameActivityOnStopAdditions>
+	<!-- optional additions to GameActivity onPause in GameActivity.java -->
+	<gameActivityOnPauseAdditions> </gameActivityOnPauseAdditions>
+	<!-- optional additions to GameActivity onResume in GameActivity.java -->
+	<gameActivityOnResumeAdditions>    </gameActivityOnResumeAdditions>
+	<!-- optional additions to GameActivity onNewIntent in GameActivity.java -->
+	<gameActivityOnNewIntentAdditions> </gameActivityOnNewIntentAdditions>
+	<!-- optional additions to GameActivity onActivityResult in GameActivity.java -->
+	<gameActivityOnActivityResultAdditions>    </gameActivityOnActivityResultAdditions>
 
 
-  <!-- optional libraries to load in GameActivity.java before libUE4.so -->
-  <soLoadLibrary>
-    <if condition="bSupported">   
-      <true>        
-        <loadLibrary name="icuuc" failmsg="ERROR ANDROID: failed to load library 1/7  icuuc "/> <!--</true> -->        
-        <loadLibrary name="icudata" failmsg="ERROR ANDROID: failed to load library 2/7   icuuc "/> <!--</true> -->        
-        <loadLibrary name="xerces-c-3.2" failmsg="ERROR ANDROID: failed to load library 3/7   icuuc "/> <!--</true> -->        
-        <loadLibrary name="biogears_common" failmsg="ERROR ANDROID: failed to load library 4/7   biogears_common "/> <!--</true> -->        
-        <loadLibrary name="biogears_io" failmsg="ERROR ANDROID: failed to load library 5/7   biogears_io "/> <!--</true> -->        
-        <loadLibrary name="biogears_cdm" failmsg="ERROR ANDROID: failed to load library 6/7   biogears_cdm "/> <!--</true> -->        
-        <loadLibrary name="biogears" failmsg="ERROR ANDROID: failed to load library 7/7   biogears "/> <!--</true> -->
-      </true>
-    </if>
-  </soLoadLibrary>
+	<!-- optional libraries to load in GameActivity.java before libUE4.so -->
+	<soLoadLibrary>
+		<if condition="bSupported">
+			<true>
+				<loadLibrary name="icuuc" failmsg="ERROR ANDROID: failed to load library 1/7  icuuc "/>
+				<!--</true> -->
+				<loadLibrary name="icudata" failmsg="ERROR ANDROID: failed to load library 2/7   icuuc "/>
+				<!--</true> -->
+				<loadLibrary name="xerces-c-3.2" failmsg="ERROR ANDROID: failed to load library 3/7   icuuc "/>
+				<!--</true> -->
+				<loadLibrary name="biogears_common" failmsg="ERROR ANDROID: failed to load library 4/7   biogears_common "/>
+				<!--</true> -->
+				<loadLibrary name="biogears_io" failmsg="ERROR ANDROID: failed to load library 5/7   biogears_io "/>
+				<!--</true> -->
+				<loadLibrary name="biogears_cdm" failmsg="ERROR ANDROID: failed to load library 6/7   biogears_cdm "/>
+				<!--</true> -->
+				<loadLibrary name="biogears" failmsg="ERROR ANDROID: failed to load library 7/7   biogears "/>
+				<!--</true> -->
+			</true>
+		</if>
+	</soLoadLibrary>
 </root>
