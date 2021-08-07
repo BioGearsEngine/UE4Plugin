@@ -177,13 +177,23 @@ public class VH_BioGears : ModuleRules
 			}
 
 			//Reading from  BaseGame.ini, DefaultGame.ini, etc... in the game folder. Look for the section
-			//    -/Script/AndroidRuntimeSettings.AndroidRuntimeSettings- for other useful values
-			//ConfigHierarchy engineConfig = ConfigCache.ReadHierarchy(ConfigHierarchyType.Engine, new DirectoryReference(PluginDirectory), Target.Platform);
+			// Target.ProjectFile.Directory contains the correct values for the AndroidRuntimeSettings. The config files in the plugin directlty
+			// Were used to get the custom VH_BioGears INI. 
+			ConfigHierarchy targetConfig = ConfigCache.ReadHierarchy(ConfigHierarchyType.Engine, Target.ProjectFile.Directory, Target.Platform);
 
-			engineConfig.GetBool("/Script/AndroidRuntimeSettings.AndroidRuntimeSettings", "bBuildForArmV7", out bBuildForArmV7);
-			engineConfig.GetBool("/Script/AndroidRuntimeSettings.AndroidRuntimeSettings", "bBuildForArm64", out bBuildForArm64);
-			engineConfig.GetBool("/Script/AndroidRuntimeSettings.AndroidRuntimeSettings", "bBuildForX8664", out bBuildForX8664);
-			engineConfig.GetBool("/Script/AndroidRuntimeSettings.AndroidRuntimeSettings", "bBuildForX86", out bBuildForX86);
+			targetConfig.GetBool("/Script/AndroidRuntimeSettings.AndroidRuntimeSettings", "bBuildForArmV7", out bBuildForArmV7);
+			targetConfig.GetBool("/Script/AndroidRuntimeSettings.AndroidRuntimeSettings", "bBuildForArm64", out bBuildForArm64);
+			targetConfig.GetBool("/Script/AndroidRuntimeSettings.AndroidRuntimeSettings", "bBuildForX8664", out bBuildForX8664);
+			targetConfig.GetBool("/Script/AndroidRuntimeSettings.AndroidRuntimeSettings", "bBuildForX86", out bBuildForX86);
+
+			System.Console.WriteLine ("Engine contains bBuildForArmV7 {0}", targetConfig.GetBool("/Script/AndroidRuntimeSettings.AndroidRuntimeSettings", "bBuildForArmV7", out bBuildForArmV7));
+			System.Console.WriteLine ("Engine contains bBuildForArm64 {0}", targetConfig.GetBool("/Script/AndroidRuntimeSettings.AndroidRuntimeSettings", "bBuildForArm64", out bBuildForArm64));
+			System.Console.WriteLine ("Engine contains bBuildForX8664 {0}", targetConfig.GetBool("/Script/AndroidRuntimeSettings.AndroidRuntimeSettings", "bBuildForX8664", out bBuildForX8664));
+			System.Console.WriteLine ("Engine contains bBuildForX86 {0}", targetConfig.GetBool("/Script/AndroidRuntimeSettings.AndroidRuntimeSettings", "bBuildForX86", out bBuildForX86));
+
+			System.Console.WriteLine ("bBuildForArmV7={0} bBuildForArm64={1} bBuildForX8664={2} bBuildForX86={3}",bBuildForArmV7, bBuildForArm64, bBuildForX8664, bBuildForX86);
+
+			System.Console.WriteLine ("\n\nConfig Cache");
 
 			config.platform = "Android";
 			config.configuration = bDebug ? "dbg" : "rel";
@@ -327,7 +337,7 @@ public class VH_BioGears : ModuleRules
 			System.Console.WriteLine();
 
 			// Add pdb files
-			System.Console.WriteLine("Adding Debug library files from " + config.library_path);
+			System.Console.WriteLine("Adding Debug symbol files from " + config.library_path);
 
 			FileInfo[] pdbFiles = libDirectory.GetFiles("*" + config.pdb_suffix);
 			foreach (FileInfo pdb in pdbFiles) {
@@ -349,7 +359,7 @@ public class VH_BioGears : ModuleRules
 			bEnableShadowVariableWarnings = false;
 #endif
 
-			System.Console.WriteLine("Adding Static library files from " + config.library_path);
+			System.Console.WriteLine("Adding library files from " + config.library_path);
 			foreach (string lib in config.libraries) {
 				string path = Path.Combine(config.library_path, lib + config.lib_suffix);
 
