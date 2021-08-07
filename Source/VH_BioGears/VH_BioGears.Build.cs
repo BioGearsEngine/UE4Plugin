@@ -50,16 +50,17 @@ public class VH_BioGears : ModuleRules
 	// This PATH is used to build binaries at the top most level of the source tree. The goal of this is
 	// to avoid LONG_PATHS which excced the 250 character limited allowed by msbuild
 	//REPO ROOT
-	private string RepoRoot { get { return Path.GetFullPath(Path.Combine(ModuleDirectory, "../../../../../../")); } }
+
+	private string RepoRoot { get { return Path.GetFullPath(Path.Combine(EngineDirectory, "../")); } }
 	private string ThirdpartyBuildDir { get { return Path.GetFullPath(Path.Combine(RepoRoot, "ThirdParty/")); } }
-	private string EngineBinaryPath { get { return Path.GetFullPath(Path.Combine(RepoRoot, "Engine/Binaries/")); } }
+	private string EngineBinaryPath { get { return Path.GetFullPath(Path.Combine(EngineDirectory, "Binaries/")); } }
 
 	//Plugin Directories
-	private string ThirdpartySourceDir { get { return Path.GetFullPath(Path.Combine(ModuleDirectory, "../../ThirdParty/")); } }
-	private string PluginBinaryPath { get { return Path.GetFullPath(Path.Combine(ModuleDirectory, "../../Binaries/")); } }
+	private string ThirdpartySourceDir { get { return Path.GetFullPath(Path.Combine(PluginDirectory, "ThirdParty/")); } }
+	private string PluginBinaryPath { get { return Path.GetFullPath(Path.Combine(PluginDirectory, "Binaries/")); } }
 
-	//Game Directories
-	private string GameBinaryPath { get { return Path.GetFullPath(Path.Combine(ModuleDirectory, "../../../../Binaries/")); } }
+	//Game Directories - So odd to me this isn't in ModuleRules
+	private string GameBinaryPath { get { return Path.GetFullPath(Path.Combine(PluginDirectory, "../../Binaries/")); } }
 
 	private bool bVerboseLogs { get { return true; } }
 
@@ -98,9 +99,7 @@ public class VH_BioGears : ModuleRules
 		});
 
 		PublicDefinitions.AddRange(new string[]
-		{
-		   "WITH_BIOGEARS_BINDING=1"
-		});
+		{ });
 
 		PrivateIncludePaths.AddRange(new string[] { });
 
@@ -124,6 +123,7 @@ public class VH_BioGears : ModuleRules
 	}
 
 	private bool LoadBioGears() {
+		ConfigHierarchy engineConfig = ConfigCache.ReadHierarchy(ConfigHierarchyType.Engine, new DirectoryReference(PluginDirectory), Target.Platform);
 		System.Console.WriteLine("Loading BioGears. This will build external libraries to " + ThirdpartyBuildDir);
 
 		PublicDefinitions.Add("XERCES_INCLUDE_WCHAR_H=0");
@@ -133,6 +133,14 @@ public class VH_BioGears : ModuleRules
 
 		if (Target.Platform == UnrealTargetPlatform.Win64) {
 			System.Console.WriteLine("Windows platform detected assuming Visual Studio 2015");
+
+			bool bBindingsWindows = false;
+			if (engineConfig.GetBool("/Scripts/VH_BioGears/Thirdparty", "bEnableBiogearsOnWindows", out bBindingsWindows)) {
+				if (!bBindingsWindows) {
+					return true;
+				}
+			}
+			PublicDefinitions.Add("WITH_BIOGEARS_BINDING=1");
 
 			config.platform = "Win64";
 			config.architecture = "x86_64";
@@ -155,10 +163,23 @@ public class VH_BioGears : ModuleRules
 			var bBuildForX8664 = false;
 			var bBuildForX86 = false;
 
+			bool bBindingsAndroid = false;
+			if (engineConfig.GetBool("/Scripts/VH_BioGears/Thirdparty", "bEnableBiogearsOnAndroid", out bBindingsAndroid)) {
+				if (!bBindingsAndroid) {
+					return true;
+				}
+				PublicDefinitions.Add("WITH_BIOGEARS_BINDING=1");
+			} else {
+				//Android UE4 Integration is currently broken so if the INI file does not contain a
+				//Explicit request to buildt these bindings we will abort and build the plugin with out
+				//BioGear
+				return true;
+			}
 
 			//Reading from  BaseGame.ini, DefaultGame.ini, etc... in the game folder. Look for the section
 			//    -/Script/AndroidRuntimeSettings.AndroidRuntimeSettings- for other useful values
-			ConfigHierarchy engineConfig = ConfigCache.ReadHierarchy(ConfigHierarchyType.Engine, Target.ProjectFile.Directory, UnrealTargetPlatform.Android);
+			//ConfigHierarchy engineConfig = ConfigCache.ReadHierarchy(ConfigHierarchyType.Engine, new DirectoryReference(PluginDirectory), Target.Platform);
+
 			engineConfig.GetBool("/Script/AndroidRuntimeSettings.AndroidRuntimeSettings", "bBuildForArmV7", out bBuildForArmV7);
 			engineConfig.GetBool("/Script/AndroidRuntimeSettings.AndroidRuntimeSettings", "bBuildForArm64", out bBuildForArm64);
 			engineConfig.GetBool("/Script/AndroidRuntimeSettings.AndroidRuntimeSettings", "bBuildForX8664", out bBuildForX8664);
@@ -215,6 +236,14 @@ public class VH_BioGears : ModuleRules
 		} else if (Target.Platform == UnrealTargetPlatform.Linux) {
 			System.Console.WriteLine("Linux Detected. Assuming x86_64 gnueabi");
 
+			bool bBindingsLinux = false;
+			if (engineConfig.GetBool("/Scripts/VH_BioGears/Thirdparty", "bEnableBiogearsOnLinux", out bBindingsLinux)) {
+				if (!bBindingsLinux) {
+					return true;
+				}
+			}
+			PublicDefinitions.Add("WITH_BIOGEARS_BINDING=1");
+
 			config.platform = "Linux";
 			config.architecture = "x86_64";
 			config.configuration = bDebug ? "dbg" : "rel";
@@ -230,6 +259,13 @@ public class VH_BioGears : ModuleRules
 		} else if (Target.Platform == UnrealTargetPlatform.Mac) {
 			System.Console.WriteLine("MacOs detected assuming Intel based MacOS");
 
+			bool bBindingsMacOS = false;
+			if (engineConfig.GetBool("/Scripts/VH_BioGears/Thirdparty", "bEnableBiogearsOnMacOs", out bBindingsMacOS)) {
+				if (!bBindingsMacOS) {
+					return true;
+				}
+			}
+			PublicDefinitions.Add("WITH_BIOGEARS_BINDING=1");
 			config.platform = "MacOS";
 			config.configuration = bDebug ? "debug" : "release";
 			config.lib_suffix = ".a";
@@ -243,6 +279,12 @@ public class VH_BioGears : ModuleRules
 			StagePlatformLibraries(config);
 			return true;
 		} else if (Target.Platform == UnrealTargetPlatform.IOS) {
+			bool bBindingsIOS = false;
+			if (engineConfig.GetBool("/Scripts/VH_BioGears/Thirdparty", "bEnableBiogearsOnIOS", out bBindingsIOS)) {
+				if (!bBindingsIOS) {
+					return true;
+				}
+			}
 			System.Console.WriteLine("VH_BioGears does not support IOS at this time. Patches accepted at http://github.com/biogearsengine");
 			return false;
 		} else {
