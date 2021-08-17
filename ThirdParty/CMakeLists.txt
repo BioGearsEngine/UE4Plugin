@@ -245,6 +245,10 @@ Thirdparty_Build(eigen
              -DEIGEN_HEADER_ONLY:BOOL=ON
 )
 
+if(ANDROID)
+ set(CMAKE_BUILD_TYPE "Debug")
+endif()
+
 Thirdparty_Build(biogears
   GIT_REPOSITORY #ssh://git@sed-stash.us.ara.com:7999/bg/core.git
              https://github.com/BioGearsEngine/core.git
