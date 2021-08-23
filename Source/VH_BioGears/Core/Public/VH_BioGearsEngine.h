@@ -112,7 +112,7 @@ protected:
 private:
 #if  defined(WITH_BIOGEARS_BINDING) // TODO: Remove when biogears works on android
 	/** BioGears Physiology Engine */
-	biogears::BioGearsEngine* BGEngine;
+	biogears::BioGearsEngine* BGEngine = nullptr;
 #endif
 
 	/** */
