@@ -274,7 +274,7 @@ endif()
 Thirdparty_Build(biogears
   GIT_REPOSITORY #ssh://git@sed-stash.us.ara.com:7999/bg/core.git
              https://github.com/BioGearsEngine/core.git
-  GIT_TAG  4648ff0837725f482eb4fdb8bf2303a0d5d7cf1c
+  GIT_TAG  e58d061238169948a4c5d4425be34899159bae14 
   CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
              -DBiogears_NO_DEBUG_POSTIFX=ON
              -DCMAKE_DEBUG_POSTFIX=
