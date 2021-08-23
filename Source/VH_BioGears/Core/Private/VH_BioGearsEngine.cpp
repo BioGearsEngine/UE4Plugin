@@ -147,7 +147,7 @@ bool UVH_BioGearsEngine::InitializeEngine(UVH_BioGearsLogger* logger, UVH_BioGea
 
 		// Initialize Physiology Engine
 		FString fullLogFile = FPaths::Combine(FPaths::ProjectLogDir(), LogFile);
-		biogears::Logger* bgLogger = new biogears::Logger(TCHAR_TO_ANSI(*fullLogFile));
+		biogears::Logger* bgLogger = biogears::create_logger(TCHAR_TO_ANSI(*fullLogFile));
 
 		BGEngine = nullptr;
 		BGEngine = biogears::create_biogears_engine(bgLogger, TCHAR_TO_ANSI(*workingDirectoryFull));

@@ -268,7 +268,7 @@ Thirdparty_Build(eigen
 
 
 if(ANDROID)
- set(CMAKE_BUILD_TYPE "Debug")
+ #set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
 Thirdparty_Build(biogears

@@ -67,38 +67,33 @@ void UVH_EnvironmentConditions::UpdateValues(const biogears::SEEnvironment* envi
 
 	if (actions.HasThermalApplication())
 	{
-		UE_LOG(VH_BioGears, Verbose, TEXT("Has Thermal Application"));
+		
 		biogears::SEThermalApplication* thermal = actions.GetThermalApplication();
 
 		if (thermal->HasAppliedTemperature())
 		{
-			UE_LOG(VH_BioGears, Verbose, TEXT("Has Applied Temperature"));
+			
 			biogears::SEAppliedTemperature& appliedTemp = thermal->GetAppliedTemperature();
-			UE_LOG(VH_BioGears, Verbose, TEXT("Storing Applied Temperature"));
+			
 
 			if (thermal != nullptr && appliedTemp.HasTemperature())
 			{
-				UE_LOG(VH_BioGears, Verbose, TEXT("Has Temperature"));
+				
 				AppliedTemperature = appliedTemp.GetTemperature(biogears::TemperatureUnit::C);
 			}
 			else
 			{
-				UE_LOG(VH_BioGears, Verbose, TEXT("Has No Temperature"));
 				AppliedTemperature = 0.0f;
 			}
 		}
 		else
 		{
-			UE_LOG(VH_BioGears, Verbose, TEXT("Has No Applied Temperature"));
 		}
 
 	}
 	else
 	{
-		UE_LOG(VH_BioGears, Verbose, TEXT("Has NO Thermal Application"));
 	}
-
-	UE_LOG(VH_BioGears, Verbose, TEXT("End Thermal"));
 }
 #endif
 
