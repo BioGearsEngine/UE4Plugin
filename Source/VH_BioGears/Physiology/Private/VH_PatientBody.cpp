@@ -109,22 +109,39 @@ void UVH_PatientBody::UpdateValues(biogears::BioGearsEngine* engine)
 {
 	if (engine != nullptr)
 	{
+		UE_LOG(VH_BioGears, Verbose, TEXT("Updating UpdateActions"));
 		UpdateActions(engine->GetActions().GetPatientActions());
+		UE_LOG(VH_BioGears, Verbose, TEXT("Updating UpdateBloodChemistry"));
 		UpdateBloodChemistry(engine->GetBloodChemistrySystem());
+		UE_LOG(VH_BioGears, Verbose, TEXT("Updating UpdateCardiovascularSystem"));
 		UpdateCardiovascularSystem(engine->GetCardiovascularSystem());
+		UE_LOG(VH_BioGears, Verbose, TEXT("Updating UpdateConditions"));
 		UpdateConditions(engine->GetConditions());
+		UE_LOG(VH_BioGears, Verbose, TEXT("Updating UpdateDrugSystem"));
 		UpdateDrugSystem(engine->GetDrugSystem());
+		UE_LOG(VH_BioGears, Verbose, TEXT("Updating UpdateEndocrineSystem"));
 		UpdateEndocrineSystem(engine->GetEndocrineSystem());
+		UE_LOG(VH_BioGears, Verbose, TEXT("Updating UpdateEnergy"));
 		UpdateEnergy(engine->GetEnergySystem());
+		UE_LOG(VH_BioGears, Verbose, TEXT("Updating UpdateEvents"));
 		UpdateEvents(engine->GetPatient().GetEventStates());
+		UE_LOG(VH_BioGears, Verbose, TEXT("Updating UpdateGastrointestinalSystem"));
 		UpdateGastrointestinalSystem(engine->GetGastrointestinalSystem());
+		UE_LOG(VH_BioGears, Verbose, TEXT("Updating UpdateHepaticSystem"));
 		UpdateHepaticSystem(engine->GetHepaticSystem());
+		UE_LOG(VH_BioGears, Verbose, TEXT("Updating UpdateInfo"));
 		UpdateInfo(engine->GetPatient());
+		UE_LOG(VH_BioGears, Verbose, TEXT("Updating UpdateMetabolicPanel"));
 		UpdateMetabolicPanel();
+		UE_LOG(VH_BioGears, Verbose, TEXT("Updating UpdateNervousSystem"));
 		UpdateNervousSystem(engine->GetNervousSystem());
+		UE_LOG(VH_BioGears, Verbose, TEXT("Updating UpdateRenalSystem"));
 		UpdateRenalSystem(engine->GetRenalSystem());
+		UE_LOG(VH_BioGears, Verbose, TEXT("Updating UpdateRespiratorySystem"));
 		UpdateRespiratorySystem(engine->GetRespiratorySystem());
+		UE_LOG(VH_BioGears, Verbose, TEXT("Updating UpdateTissue"));
 		UpdateTissue(engine->GetTissueSystem());
+		UE_LOG(VH_BioGears, Verbose, TEXT("Finished updating BioGears PatientBody"));
 	}
 }
 #endif

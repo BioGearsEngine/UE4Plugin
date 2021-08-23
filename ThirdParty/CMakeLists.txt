@@ -75,10 +75,18 @@ if(CMAKE_MAKE_PROGRAM)
   sanatize_path_list(CMAKE_MAKE_PROGRAM _safe_find_root)
   set(CMAKE_MAKE_PROGRAM_ARGUMENTS  "-DCMAKE_MAKE_PROGRAM:FILEPATH=${_safe_find_root}")
 endif()
+if(ANDROID_STL)
+  sanatize_path_list(ANDROID_STL _safe_find_root)
+  set(ANDROID_STL_ARGUMENTS "-DANDROID_STL:STRING=${_safe_find_root}")
+endif()
+if(ANDROID_CPP_FEATURES)
+  sanatize_path_list(ANDROID_CPP_FEATURES _safe_find_root)
+  set(ANDROID_CPP_FEATURES_ARGUMENTS "-DANDROID_CPP_FEATURES:STRING=${_safe_find_root}")
+endif()
 if(ANDROID_ABI)
   sanatize_path_list(ANDROID_ABI _safe_find_root)
   set(ANDROID_ABI_ARGUMENTS "-DANDROID_ABI:STRING=${_safe_find_root}")
-  endif()
+endif()
 if(ANDROID_ARM_NEON)
   sanatize_path_list(ANDROID_ARM_NEON _safe_find_root)
   set(ANDROID_ARM_NEON_ARGUMENTS "-DANDROID_ARM_NEON:BOOL=${_safe_find_root}")
@@ -165,6 +173,8 @@ else()
     CMAKE_ARGS  -G "${CMAKE_GENERATOR}"
           ${_CMAKE_ARGS}
           ${CMAKE_TOOLCHAIN_ARGUMENTS}
+		  ${ANDROID_STL_ARGUMENTS}
+		  ${ANDROID_CPP_FEATURES_ARGUMENTS}
           ${ANDROID_ABI_ARGUMENTS}
           ${ANDROID_ARM_NEON_ARGUMENTS}
           ${ANDROID_PLATFORM_ARGUMENTS}
@@ -176,6 +186,12 @@ else()
 
   if(CMAKE_TOOLCHAIN_ARGUMENTS)
    string(APPEND Status_Message   " \n\t\t\t ${CMAKE_TOOLCHAIN_ARGUMENTS}")
+  endif()
+  if(ANDROID_STL_ARGUMENTS)
+   string(APPEND Status_Message   " \n\t\t\t ${ANDROID_STL_ARGUMENTS}")
+  endif()
+  if(ANDROID_CPP_FEATURES_ARGUMENTS)
+    string(APPEND Status_Message   " \n\t\t\t ${ANDROID_CPP_FEATURES_ARGUMENTS}")
   endif()
   if(ANDROID_ABI_ARGUMENTS)
    string(APPEND Status_Message   " \n\t\t\t ${ANDROID_ABI_ARGUMENTS}")
@@ -213,6 +229,7 @@ message(STATUS "")
 if (NOT XSD_CMAKE_GENERATOR )
 	set(XSD_CMAKE_GENERATOR ${CMAKE_GENERATOR})
 endif()
+
 Thirdparty_Build(xsd
   GIT_REPOSITORY https://github.com/StevenAWhite/CodeSynthesisXSD-Binary.git
   NATIVE_CODE
@@ -224,17 +241,21 @@ Thirdparty_Build(xerces-c
   GIT_TAG xerces-3.2.2
   CMAKE_ARGS ${XERCES_C_TRANSCORDER_ARGUMENTS}
 )
+
 ExternalProject_Add_StepDependencies(xsd build xerces-c)
 
 if(ANDROID)
   #
   # Android doesn't ship with a good transcoder for UTF
   # Characters so we need to build it
+
   Thirdparty_Build(icu
     GIT_REPOSITORY https://github.com/StevenAWhite/icu-cmake.git
   )
   ExternalProject_Add_StepDependencies(xerces-c build icu)
+
 endif()
+
 
 Thirdparty_Build(eigen
   GIT_REPOSITORY https://gitlab.com/stevenawhite/eigen.git
@@ -245,6 +266,7 @@ Thirdparty_Build(eigen
              -DEIGEN_HEADER_ONLY:BOOL=ON
 )
 
+
 if(ANDROID)
  set(CMAKE_BUILD_TYPE "Debug")
 endif()
@@ -252,8 +274,10 @@ endif()
 Thirdparty_Build(biogears
   GIT_REPOSITORY #ssh://git@sed-stash.us.ara.com:7999/bg/core.git
              https://github.com/BioGearsEngine/core.git
-  GIT_TAG  r/burncare
+  GIT_TAG  f/sawhite-dllboundry
   CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+             -DBiogears_NO_DEBUG_POSTIFX=ON
+             -DCMAKE_DEBUG_POSTFIX=
              -DBiogears_COMMON_BUILD_STATIC=OFF
              -DBiogears_BUILD_HOWTOS:BOOL=OFF
              -DBiogears_BUILD_CIRCUIT_TESTS:BOOL=OFF
@@ -268,5 +292,6 @@ Thirdparty_Build(biogears
              -DBiogears_IO_USE_SHORT_TARGET_NAMES=ON
              -DXSD_USE_SHORT_TARGET_NAMES=ON
 )
-ExternalProject_Add_StepDependencies(biogears build xsd)
-ExternalProject_Add_StepDependencies(biogears build eigen)
+
+  ExternalProject_Add_StepDependencies(biogears build xsd)
+  ExternalProject_Add_StepDependencies(biogears build eigen)

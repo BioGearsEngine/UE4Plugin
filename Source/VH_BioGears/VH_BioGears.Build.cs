@@ -186,14 +186,14 @@ public class VH_BioGears : ModuleRules
 			targetConfig.GetBool("/Script/AndroidRuntimeSettings.AndroidRuntimeSettings", "bBuildForX8664", out bBuildForX8664);
 			targetConfig.GetBool("/Script/AndroidRuntimeSettings.AndroidRuntimeSettings", "bBuildForX86", out bBuildForX86);
 
-			System.Console.WriteLine ("Engine contains bBuildForArmV7 {0}", targetConfig.GetBool("/Script/AndroidRuntimeSettings.AndroidRuntimeSettings", "bBuildForArmV7", out bBuildForArmV7));
-			System.Console.WriteLine ("Engine contains bBuildForArm64 {0}", targetConfig.GetBool("/Script/AndroidRuntimeSettings.AndroidRuntimeSettings", "bBuildForArm64", out bBuildForArm64));
-			System.Console.WriteLine ("Engine contains bBuildForX8664 {0}", targetConfig.GetBool("/Script/AndroidRuntimeSettings.AndroidRuntimeSettings", "bBuildForX8664", out bBuildForX8664));
-			System.Console.WriteLine ("Engine contains bBuildForX86 {0}", targetConfig.GetBool("/Script/AndroidRuntimeSettings.AndroidRuntimeSettings", "bBuildForX86", out bBuildForX86));
+			System.Console.WriteLine("Engine contains bBuildForArmV7 {0}", targetConfig.GetBool("/Script/AndroidRuntimeSettings.AndroidRuntimeSettings", "bBuildForArmV7", out bBuildForArmV7));
+			System.Console.WriteLine("Engine contains bBuildForArm64 {0}", targetConfig.GetBool("/Script/AndroidRuntimeSettings.AndroidRuntimeSettings", "bBuildForArm64", out bBuildForArm64));
+			System.Console.WriteLine("Engine contains bBuildForX8664 {0}", targetConfig.GetBool("/Script/AndroidRuntimeSettings.AndroidRuntimeSettings", "bBuildForX8664", out bBuildForX8664));
+			System.Console.WriteLine("Engine contains bBuildForX86 {0}", targetConfig.GetBool("/Script/AndroidRuntimeSettings.AndroidRuntimeSettings", "bBuildForX86", out bBuildForX86));
 
-			System.Console.WriteLine ("bBuildForArmV7={0} bBuildForArm64={1} bBuildForX8664={2} bBuildForX86={3}",bBuildForArmV7, bBuildForArm64, bBuildForX8664, bBuildForX86);
+			System.Console.WriteLine("bBuildForArmV7={0} bBuildForArm64={1} bBuildForX8664={2} bBuildForX86={3}", bBuildForArmV7, bBuildForArm64, bBuildForX8664, bBuildForX86);
 
-			System.Console.WriteLine ("\n\nConfig Cache");
+			System.Console.WriteLine("\n\nConfig Cache");
 
 			config.platform = "Android";
 			config.configuration = bDebug ? "dbg" : "rel";
@@ -372,6 +372,7 @@ public class VH_BioGears : ModuleRules
 		}
 	}
 
+
 	private bool BuildModel( ThirdPartyConfig config ) {
 		// Build Paths
 		config.build_path = Path.Combine(ThirdpartyBuildDir, config.platform, config.architecture, config.configuration, config.project);
@@ -403,10 +404,8 @@ public class VH_BioGears : ModuleRules
 			Console.WriteLine("Cannot build project. Exited with code: " + installCode);
 			return false;
 		}
-
 		return true;
 	}
-
 
 	private string CreateCMakeBuildCommand( ThirdPartyConfig config ) {
 		Console.WriteLine(RuntimeInformation.OSDescription);
@@ -467,6 +466,8 @@ public class VH_BioGears : ModuleRules
 						" -D CMAKE_BUILD_TYPE=Release" +
 						" -D CMAKE_MAKE_PROGRAM=" + cmake_make_program +
 						" -D CMAKE_TOOLCHAIN_FILE=" + android_toolchain_file +
+						" -D ANDROID_STL=gnustl_static" +
+						" -D ANDROID_CPP_FEATURES='rtti;exceptions'" +
 						" -D ANDROID_ABI=" + ((config.architecture == "armeabi-v7a") ? "armeabi-v7a" : "arm64-v8a") + ((config.architecture == "arm64-v8a") ? "" : " -DANDROID_ARM_NEON=ON") +
 						" -D ANDROID_PLATFORM=\"android-24\"" +
 						" -D CMAKE_INSTALL_PREFIX=" + config.install_path +

@@ -112,7 +112,7 @@ protected:
 private:
 #if  defined(WITH_BIOGEARS_BINDING) // TODO: Remove when biogears works on android
 	/** BioGears Physiology Engine */
-	TUniquePtr<biogears::BioGearsEngine> BGEngine;
+	biogears::BioGearsEngine* BGEngine;
 #endif
 
 	/** */
@@ -262,7 +262,7 @@ public:
 	// ---------------------------------
 	// --- Implementation
 	// ---------------------------------
-
+	void BeginDestroy()	override;
 private:
 	UWorld* GetVHWorld();
 

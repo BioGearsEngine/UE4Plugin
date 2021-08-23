@@ -15,7 +15,7 @@ UVH_BioGearsPhysiology::UVH_BioGearsPhysiology(const FObjectInitializer& objectI
 
 UVH_BioGearsPhysiology::~UVH_BioGearsPhysiology()
 {
-} 
+}
 
 
 // ---------------------------------
@@ -39,11 +39,6 @@ void UVH_BioGearsPhysiology::UpdateValues(biogears::BioGearsEngine* engine)
 {
 	if (engine != nullptr)
 	{
-		if (Anesthesia != nullptr)
-		{
-			Anesthesia->UpdateValues(engine->GetAnesthesiaMachine());
-		}
-
 		if (Environment != nullptr)
 		{
 			Environment->UpdateValues(engine->GetEnvironment(), engine->GetActions().GetEnvironmentActions());
@@ -52,6 +47,11 @@ void UVH_BioGearsPhysiology::UpdateValues(biogears::BioGearsEngine* engine)
 		if (PatientBody != nullptr)
 		{
 			PatientBody->UpdateValues(engine);
+		}
+
+		if (Anesthesia != nullptr)
+		{
+			Anesthesia->UpdateValues(engine->GetAnesthesiaMachine());
 		}
 	}
 }

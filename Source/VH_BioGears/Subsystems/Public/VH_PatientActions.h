@@ -323,7 +323,7 @@ public:
 
 private:
 #if  defined(WITH_BIOGEARS_BINDING) // TODO: Remove when biogears works on android
-	void UpdateCompoundInfusions(const std::map<const biogears::SESubstanceCompound*, biogears::SESubstanceCompoundInfusion*>);
-	void UpdateSubstanceInfusions(const std::map<const biogears::SESubstance*, biogears::SESubstanceInfusion*>);
+	void UpdateCompoundInfusions(const biogears::MapWrapper<const biogears::SESubstanceCompound*, biogears::SESubstanceCompoundInfusion*>);
+	void UpdateSubstanceInfusions(const biogears::MapWrapper<const biogears::SESubstance*, biogears::SESubstanceInfusion*>);
 #endif
 };

@@ -27,7 +27,8 @@ UVH_BioGearsEngine::UVH_BioGearsEngine(const FObjectInitializer& objectInitializ
 	bInitialized(false),
 	bTrackingData(false),
 	SimulationTime(0.0f),
-	bStopping(true)
+	bStopping(true),
+	BGEngine(nullptr)
 {}
 
 UVH_BioGearsEngine::~UVH_BioGearsEngine()
@@ -66,7 +67,7 @@ uint32 UVH_BioGearsEngine::Run()
 		float currentTime = (world != nullptr) ? world->GetTimeSeconds() : 0.0f;
 
 #if  defined(WITH_BIOGEARS_BINDING) // TODO: Remove when biogears works on android
-		if (bInitialized && BGEngine.IsValid() && GetPlayMode() != EScenarioPlayMode::Paused)
+		if (bInitialized && BGEngine && GetPlayMode() != EScenarioPlayMode::Paused)
 		{
 			// Data Request
 			float timeBetweenDataRequests = 1.0f / BGEngine->GetEngineTrack()->GetDataRequestManager().GetSamplesPerSecond();
@@ -147,7 +148,9 @@ bool UVH_BioGearsEngine::InitializeEngine(UVH_BioGearsLogger* logger, UVH_BioGea
 		// Initialize Physiology Engine
 		FString fullLogFile = FPaths::Combine(FPaths::ProjectLogDir(), LogFile);
 		biogears::Logger* bgLogger = new biogears::Logger(TCHAR_TO_ANSI(*fullLogFile));
-		BGEngine = MakeUnique<biogears::BioGearsEngine>(bgLogger, TCHAR_TO_ANSI(*workingDirectoryFull));
+
+		BGEngine = nullptr;
+		BGEngine = biogears::create_biogears_engine(bgLogger, TCHAR_TO_ANSI(*workingDirectoryFull));
 
 		if (logger != nullptr)
 		{
@@ -257,7 +260,7 @@ void UVH_BioGearsEngine::TrackData(const FString& outputFile, TMap<FString, biog
 bool UVH_BioGearsEngine::IsEngineActive()
 {
 #if  defined(WITH_BIOGEARS_BINDING) // TODO: Remove when biogears works on android
-	return BGEngine.IsValid() && Thread != nullptr;
+	return BGEngine && Thread != nullptr;
 #else
 	return false;
 #endif
@@ -266,7 +269,7 @@ bool UVH_BioGearsEngine::IsEngineActive()
 bool UVH_BioGearsEngine::IsEngineReady()
 {
 #if  defined(WITH_BIOGEARS_BINDING) // TODO: Remove when biogears works on android
-	return bInitialized && BGEngine.IsValid();
+	return bInitialized && BGEngine;
 #else
 	return false;
 #endif
@@ -308,7 +311,7 @@ FThreadSafeBool UVH_BioGearsEngine::AddAction(TSharedPtr<biogears::SEAction> act
 bool UVH_BioGearsEngine::ProcessPatientAssessment(biogears::SEPatientAssessment& assessment)
 {
 	FScopeLock modeLock(&EngineCriticalSection);
-	if (BGEngine.IsValid())
+	if (BGEngine)
 	{
 		return BGEngine->GetPatientAssessment(assessment);
 	}
@@ -319,7 +322,7 @@ bool UVH_BioGearsEngine::ProcessPatientAssessment(biogears::SEPatientAssessment&
 bool UVH_BioGearsEngine::ProcessPatientAssessmentRequest(biogears::SEPatientAssessmentRequest& request)
 {
 	FScopeLock actionLock(&EngineCriticalSection);
-	if (BGEngine.IsValid())
+	if (BGEngine)
 	{
 		return BGEngine->ProcessAction(request);
 	}
@@ -335,7 +338,7 @@ TArray<CDM::ActionData*> UVH_BioGearsEngine::GetActionsFromScenarioFile(const FS
 {
 	TArray<CDM::ActionData*> actions = TArray<CDM::ActionData*>();
 
-	if (BGEngine.IsValid())
+	if (BGEngine)
 	{
 		// Load Actions
 		biogears::SEScenario scenario = biogears::SEScenario(BGEngine->GetSubstanceManager());
@@ -363,7 +366,7 @@ TArray<CDM::ActionData*> UVH_BioGearsEngine::GetActionsFromScenarioFile(const FS
 #if  defined(WITH_BIOGEARS_BINDING) // TODO: Remove when biogears works on android
 biogears::SESubstanceManager* UVH_BioGearsEngine::GetSubstanceManager()
 {
-	if (BGEngine.IsValid())
+	if (BGEngine)
 	{
 		return &BGEngine->GetSubstanceManager();
 	}
@@ -545,7 +548,7 @@ void UVH_BioGearsEngine::AdvanceTime(float seconds)
 {
 #if  defined(WITH_BIOGEARS_BINDING) // TODO: Remove when biogears works on android
 	FScopeLock lock(&EngineCriticalSection);
-	if (BGEngine.IsValid())
+	if (BGEngine)
 	{
 		BGEngine->AdvanceModelTime(seconds, biogears::TimeUnit::s);
 	}
@@ -581,7 +584,7 @@ TSharedPtr<biogears::SEAction> UVH_BioGearsEngine::GetTopAction()
 bool UVH_BioGearsEngine::ProcessAction(const biogears::SEAction& action)
 {
 	FScopeLock lock(&EngineCriticalSection);
-	if (BGEngine.IsValid())
+	if (BGEngine)
 	{
 		return BGEngine->ProcessAction(action);
 	}
@@ -599,7 +602,7 @@ void UVH_BioGearsEngine::UpdateData()
 	{
 		if (Physiology != nullptr)
 		{
-			Physiology->UpdateValues(BGEngine.Get());
+			Physiology->UpdateValues(BGEngine);
 		}
 
 		UpdateBioGearsMetrics();
@@ -796,4 +799,14 @@ FString UVH_BioGearsEngine::FixedCollapseRelativeDirectories(const FString& path
 	}
 
 	return (driveLetter + prefix + newPath);
+}
+
+void UVH_BioGearsEngine::BeginDestroy()
+{
+    Super::BeginDestroy();
+
+	if (BGEngine != nullptr)
+	{
+		biogears::destroy_biogears_engine(&BGEngine);
+	}
 }
