@@ -147,6 +147,12 @@ P4 Will check the current environment it is running under  for a P4IGNORE variab
 In the UE4 Editor File->Package Project->Android->Android Multi. Select the default folder of E:\Burncare\Android (2 hour wait)
 
 When GenerateProjectFiles is run for the first time.  CMake will be launched and compile native libraries for Biogears in `E:\Burncare\Thirdparty\Artifacts`. Intermediaries and Source will be stored in `E:\Burncare\Thirdparty\<Platform>\<Config>`  If you have trouble with this build it is most likely that you need to delete `E:\Burncare\Thirdparty\<Platform>\<Config>\biogears\{build,src}` And rerun GenerateProjectFiles.bat for windows and Package Build for android.  The Plugin tracks the biogears branch `r/burncare` so it does change from time to time to fix builds. 
+
+Once the Editor is built unless VH_Biogears.Build.cs is edited MSVC is not able to know it should rebuild Biogears. So if you expect a software update to the BioGears libraries manually run GenerateProjectFiles.bat again to ensure that CMake is kicked off. This will always happen automatically for Android builds. For better or worst this adds a few minutes to every Android Package.
+
+The File VH_Biogears_APL.xml contains Plugin instructions to copy the Libraries from `E:\Burncare\Thirdparty\Artifacts` to the APK staging ground and how to load them on the NDK.  Assuming no complications with the repos that CMake is referencing when it pulls the BioGears code base.  The build should be fairly automated if the correct Android SDK,NDK,Java,Gradle, and CMAKE versions are referenced. 
+
+This style of Plugin is a work in progress please report any issues.
 ## License
 This plugin is provied under the APACHE 2.0 license.
 
