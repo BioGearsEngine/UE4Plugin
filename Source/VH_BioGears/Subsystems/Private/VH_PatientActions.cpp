@@ -78,69 +78,38 @@ void UVH_PatientActions::InitializeActions()
 void UVH_PatientActions::UpdateValues(biogears::SEPatientActionCollection& actions)
 {
 	FScopeLock lock(&CriticalSection);
-    UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing TYPE"));
 	bAcuteRespiratoryDistress = actions.HasAcuteRespiratoryDistress();
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing TYPE"));
 	AcuteRespiratoryDistressSeverity = (bAcuteRespiratoryDistress && actions.GetAcuteRespiratoryDistress()->HasSeverity()) ? actions.GetAcuteRespiratoryDistress()->GetSeverity().GetValue() : 0.0f;
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing bAcuteStress"));
 	bAcuteStress = actions.HasAcuteStress();
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing AcuteStressSeverity"));
 	AcuteStressSeverity = (bAcuteStress && actions.GetAcuteStress()->HasSeverity()) ? actions.GetAcuteStress()->GetSeverity().GetValue() : 0.0f;
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing bAirwayObstruction"));
 	bAirwayObstruction = actions.HasAirwayObstruction();
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing AirwayObstructionSeverity"));
 	AirwayObstructionSeverity = (bAirwayObstruction && actions.GetAirwayObstruction()->HasSeverity()) ? actions.GetAirwayObstruction()->GetSeverity().GetValue() : 0.0f;
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing bApnea"));
 	bApnea = actions.HasApnea();
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing TYPE"));
 	ApneaSeverity = (bApnea && actions.GetApnea()->HasSeverity()) ? actions.GetApnea()->GetSeverity().GetValue() : 0.0f;
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing bAsthmaAttack"));
 	bAsthmaAttack = actions.HasAsthmaAttack();
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing AsthmaAttackSeverity"));
 	AsthmaAttackSeverity = (bAsthmaAttack && actions.GetAsthmaAttack()->HasSeverity()) ? actions.GetAsthmaAttack()->GetSeverity().GetValue() : 0.0f;
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing bBronchoconstriction"));
 	bBronchoconstriction = actions.HasBronchoconstriction();
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing bBurnWound"));
 	bBurnWound = actions.HasBurnWound();
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing BurnWoundTotalBodySurfaceArea"));
 	BurnWoundTotalBodySurfaceArea = (bBurnWound && actions.GetBurnWound()->HasTotalBodySurfaceArea()) ? actions.GetBurnWound()->GetTotalBodySurfaceArea().GetValue() : 0.0f;
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing bBurnWoundInflammation"));
 	bBurnWoundInflammation = bBurnWound && actions.GetBurnWound()->HasInflammation();
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing bCardiacArrest"));
 	bCardiacArrest = actions.HasCardiacArrest();
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing bChestCompression"));
 	bChestCompression = actions.HasChestCompression();
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing ChestCompressionForce"));
 	ChestCompressionForce = (actions.HasChestCompressionForce() && actions.GetChestCompressionForce()->HasForce()) ? actions.GetChestCompressionForce()->GetForce().GetValue() : 0.0f;
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing ChestCompressionForceScale"));
 	ChestCompressionForceScale = (actions.HasChestCompressionForceScale() && actions.GetChestCompressionForceScale()->HasForceScale()) ? actions.GetChestCompressionForceScale()->GetForceScale().GetValue() : 0.0f;
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing ChestCompressionForcePeriod"));
 	ChestCompressionForcePeriod = (actions.HasChestCompressionForceScale() && actions.GetChestCompressionForceScale()->HasForcePeriod()) ? actions.GetChestCompressionForceScale()->GetForcePeriod().GetValue() : 0.0f;
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing bChestOcclusiveDressingLeft"));
 	bChestOcclusiveDressingLeft = actions.HasLeftChestOcclusiveDressing();
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing bChestOcclusiveDressingRight"));
 	bChestOcclusiveDressingRight = actions.HasRightChestOcclusiveDressing();
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing bConsciousRespiration"));
 	bConsciousRespiration = actions.HasConsciousRespiration();
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing bConsumeNutrients"));
 	bConsumeNutrients = actions.HasConsumeNutrients();
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing bExercise"));
 	bExercise = actions.HasExercise();
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing bInfection"));
 	bInfection = actions.HasInfection();
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing bIntubation"));
 	bIntubation = actions.HasIntubation();
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing bMechanicalVentilation"));
 	bMechanicalVentilation = actions.HasMechanicalVentilation();
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing bPericardialEffusion"));
 	bPericardialEffusion = actions.HasPericardialEffusion();
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing bSleepState"));
 	bSleepState = actions.HasSleepState();
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Probing bUrinate"));
 	bUrinate = actions.HasUrinate();
 
 
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues HasLeftOpenTensionPneumothorax"));
 	if (actions.HasLeftOpenTensionPneumothorax())
 	{
 		TensionPneumothorax = actions.HasRightOpenTensionPneumothorax() ? EPatientChestSide::Both : EPatientChestSide::Left;
@@ -150,7 +119,6 @@ void UVH_PatientActions::UpdateValues(biogears::SEPatientActionCollection& actio
 		TensionPneumothorax = actions.HasRightOpenTensionPneumothorax() ? EPatientChestSide::Right : EPatientChestSide::None;
 	}
 
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues HasLeftNeedleDecompression"));
 	if (actions.HasLeftNeedleDecompression())
 	{
 		NeedleDecompression = actions.HasRightNeedleDecompression() ? EPatientChestSide::Both : EPatientChestSide::Left;
@@ -160,7 +128,6 @@ void UVH_PatientActions::UpdateValues(biogears::SEPatientActionCollection& actio
 		NeedleDecompression = actions.HasRightNeedleDecompression() ? EPatientChestSide::Right : NeedleDecompression = EPatientChestSide::None;
 	}
 
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues HasBrainInjury && HasType"));
 	if (actions.HasBrainInjury() && actions.GetBrainInjury()->HasType())
 	{
 		switch (actions.GetBrainInjury()->GetType())
@@ -179,30 +146,20 @@ void UVH_PatientActions::UpdateValues(biogears::SEPatientActionCollection& actio
 		}
 	}
 
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues HasBrainInjury && HasSeverity"));
 	BrainInjurySeverity = (actions.HasBrainInjury() && actions.GetBrainInjury()->HasSeverity()) ? actions.GetBrainInjury()->GetSeverity().GetValue() : 0.0f;
 
-
-\
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues For each Hemorrhage"));
-	auto hemorrhages = actions.GetHemorrhageWrapper();
+   auto hemorrhages = actions.GetHemorrhageWrapper();
 	for(auto itr = hemorrhages.begin(); itr != hemorrhages.end(); ++itr) {
-		UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues hemorrhage->HasCompartment()"));
 		auto hemorrhage = (*itr).second();
 		if (hemorrhage != nullptr && hemorrhage->HasCompartment())
 		{
-			UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues hemorrhage->GetCompartment_cStr()"));
 			FString compartment = FString(ANSI_TO_TCHAR(hemorrhage->GetCompartment_cStr()));
-			UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues  hemorrhage->HasInitialRate() "));
 			float rate = hemorrhage->HasInitialRate() ? hemorrhage->GetInitialRate().GetValue() : 0.0f;
-			UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues hemorrhage->HasBleedResistance()"));
 			float resistance = hemorrhage->HasBleedResistance() ? hemorrhage->GetBleedResistance().GetValue() : 0.0f;
-			UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Hemorrhages.Add"));
 			Hemorrhages.Add(compartment, FBioGearsHemorrhage(rate, resistance));
 		}
 	}
 
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues For each PainStimulus"));
 	auto stimuli = actions.GetPainStimuliWrapper();
 	for (auto iter = stimuli.begin(); iter != stimuli.end(); ++iter)
 	{
@@ -217,7 +174,6 @@ void UVH_PatientActions::UpdateValues(biogears::SEPatientActionCollection& actio
 		}
 	}
 
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues For each tourniquet"));
 	auto tourniquets = actions.GetTourniquetsWrapper();
 	for (auto iter = tourniquets.begin(); iter != tourniquets.end(); ++iter)
 	{
@@ -240,15 +196,12 @@ void UVH_PatientActions::UpdateValues(biogears::SEPatientActionCollection& actio
 						break;
 				}
 			}
-			UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues Tourniquets.Add"));
 			Tourniquets.Add(compartment, level);
 		}
 	}
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues UpdateCompoundInfusions"));
 	UpdateCompoundInfusions(actions.GetSubstanceCompoundInfusionsWrapper());
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues UpdateSubstanceInfusions"));
 	UpdateSubstanceInfusions(actions.GetSubstanceInfusionsWrapper());
-	UE_LOG(VH_BioGears, Verbose, TEXT("Biogears UVH_PatientActions::UpdateValues FINISHED"));
+	
 }
 #endif
 
