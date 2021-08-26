@@ -6,6 +6,7 @@ We hope to maintain and contribute to this plugin overtime to create a more robu
 ## Summary of required items
 
 |Requirment | NOTE |
+|-----------|-------|
 | android-ndk-17c | This is the only version of the NDK that the current native components can build under UE4.23 the required UE4 version of this plugin.
 |android-21 | This is the API and build tools you must install to build the Non native parts of the Android Package
 | Gradle | A tool for bundling up Java Builds| 
@@ -145,6 +146,7 @@ P4 Will check the current environment it is running under  for a P4IGNORE variab
 ## Packaging the Build
 In the UE4 Editor File->Package Project->Android->Android Multi. Select the default folder of E:\Burncare\Android (2 hour wait)
 
+When GenerateProjectFiles is run for the first time.  CMake will be launched and compile native libraries for Biogears in `E:\Burncare\Thirdparty\Artifacts`. Intermediaries and Source will be stored in `E:\Burncare\Thirdparty\<Platform>\<Config>`  If you have trouble with this build it is most likely that you need to delete `E:\Burncare\Thirdparty\<Platform>\<Config>\biogears\{build,src}` And rerun GenerateProjectFiles.bat for windows and Package Build for android.  The Plugin tracks the biogears branch `r/burncare` so it does change from time to time to fix builds. 
 ## License
 This plugin is provied under the APACHE 2.0 license.
 
