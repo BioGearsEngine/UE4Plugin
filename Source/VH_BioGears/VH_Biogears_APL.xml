@@ -65,20 +65,20 @@ $B(Distribution) = true if distribution build
 		<log text="Value of BuildDir set to $S(BuildDir)"/>
 		<log text="Value of Configuration is $S(Configuration)"/>
 
-		<setBoolEquals result="isDebug" arg1="$S(Configuration)" arg2="Debug"/>
+		<setBoolIsEqual result="isDebug" arg1="$S(Configuration)" arg2="Debug"/>
 		<setStringFromEnvVar result="config" value="rel"/>
 		<if condition="isDebug">
 			<true>
 				<setStringFromEnvVar result="config" value="dbg"/>
 			</true>
 		</if>
-		<setBoolEquals result="isDebugGame" arg1="$S(Configuration)" arg2="Game"/>
+		<setBoolIsEqual result="isDebugGame" arg1="$S(Configuration)" arg2="Game"/>
 		<if condition="isDebugGame">
 			<true>
 				<setStringFromEnvVar result="config" value="dbg"/>
 			</true>
 		</if>
-		<setBoolEquals result="isDevelopment" arg1="$S(Configuration)" arg2="Development"/>
+		<setBoolIsEqual result="isDevelopment" arg1="$S(Configuration)" arg2="Development"/>
 		<if condition="isDevelopment">
 			<true>
 				<setStringFromEnvVar result="config" value="dbg"/>
