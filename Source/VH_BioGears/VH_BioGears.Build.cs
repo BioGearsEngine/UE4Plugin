@@ -433,6 +433,7 @@ public class VH_BioGears : ModuleRules
 			string android_ndk_root = Environment.GetEnvironmentVariable("ANDROID_NDK_ROOT");
 			string android_home = Environment.GetEnvironmentVariable("ANDROID_HOME");
 			string ant_home = Environment.GetEnvironmentVariable("ANT_HOME");
+			Environment.SetEnvironmentVariable("UE4_LINUX_USE_LIBCXX","0");
 			string android_toolchain_file;
 
 			if (String.IsNullOrEmpty(android_ndk_root)) {
@@ -466,7 +467,7 @@ public class VH_BioGears : ModuleRules
 						" -D CMAKE_BUILD_TYPE=Release" +
 						" -D CMAKE_MAKE_PROGRAM=" + cmake_make_program +
 						" -D CMAKE_TOOLCHAIN_FILE=" + android_toolchain_file +
-						" -D ANDROID_STL=gnustl_static" +
+						" -D ANDROID_STL=gnustl_shared" +
 						" -D ANDROID_CPP_FEATURES='rtti;exceptions'" +
 						" -D ANDROID_ABI=" + ((config.architecture == "armeabi-v7a") ? "armeabi-v7a" : "arm64-v8a") + ((config.architecture == "arm64-v8a") ? "" : " -DANDROID_ARM_NEON=ON") +
 						" -D ANDROID_PLATFORM=\"android-24\"" +
