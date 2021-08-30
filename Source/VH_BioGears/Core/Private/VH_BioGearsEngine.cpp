@@ -27,8 +27,8 @@ UVH_BioGearsEngine::UVH_BioGearsEngine(const FObjectInitializer& objectInitializ
 	bInitialized(false),
 	bTrackingData(false),
 	SimulationTime(0.0f),
-	bStopping(true),
-	BGEngine(nullptr)
+	BGEngine(nullptr),
+	bStopping(true)
 {}
 
 UVH_BioGearsEngine::~UVH_BioGearsEngine()
@@ -64,6 +64,7 @@ uint32 UVH_BioGearsEngine::Run()
 
 	while (!bStopping)
 	{
+		FScopeLock lock(&EngineCriticalSection);
 		float currentTime = (world != nullptr) ? world->GetTimeSeconds() : 0.0f;
 
 #if  defined(WITH_BIOGEARS_BINDING) // TODO: Remove when biogears works on android
@@ -147,14 +148,14 @@ bool UVH_BioGearsEngine::InitializeEngine(UVH_BioGearsLogger* logger, UVH_BioGea
 
 		// Initialize Physiology Engine
 		FString fullLogFile = FPaths::Combine(FPaths::ProjectLogDir(), LogFile);
-		biogears::Logger* bgLogger = biogears::create_logger(TCHAR_TO_ANSI(*fullLogFile));
+		//biogears::Logger* bgLogger = biogears::create_logger(TCHAR_TO_ANSI(*fullLogFile));
 
 		BGEngine = nullptr;
-		BGEngine = biogears::create_biogears_engine(bgLogger, TCHAR_TO_ANSI(*workingDirectoryFull));
+		BGEngine = biogears::create_biogears_engine(TCHAR_TO_ANSI(*fullLogFile), TCHAR_TO_ANSI(*workingDirectoryFull));
 
 		if (logger != nullptr)
 		{
-			bgLogger->SetForward(logger);
+			BGEngine->GetLogger()->SetForward(logger);
 		}
 
 		// Create Worker Thread to advance engine
@@ -295,7 +296,7 @@ void UVH_BioGearsEngine::SetPlayMode(EScenarioPlayMode playMode)
 
 float UVH_BioGearsEngine::GetSimulationTime()
 {
-	FScopeLock lock(&EngineCriticalSection);
+	//FScopeLock lock(&EngineCriticalSection);
 	return SimulationTime;
 }
 
@@ -547,7 +548,7 @@ biogears::Logger* UVH_BioGearsEngine::GetLogger()
 void UVH_BioGearsEngine::AdvanceTime(float seconds)
 {
 #if  defined(WITH_BIOGEARS_BINDING) // TODO: Remove when biogears works on android
-	FScopeLock lock(&EngineCriticalSection);
+	//FScopeLock lock(&EngineCriticalSection);
 	if (BGEngine)
 	{
 		BGEngine->AdvanceModelTime(seconds, biogears::TimeUnit::s);
@@ -583,7 +584,7 @@ TSharedPtr<biogears::SEAction> UVH_BioGearsEngine::GetTopAction()
 
 bool UVH_BioGearsEngine::ProcessAction(const biogears::SEAction& action)
 {
-	FScopeLock lock(&EngineCriticalSection);
+	//FScopeLock lock(&EngineCriticalSection);
 	if (BGEngine)
 	{
 		return BGEngine->ProcessAction(action);
@@ -612,7 +613,7 @@ void UVH_BioGearsEngine::UpdateData()
 
 void UVH_BioGearsEngine::UpdateBioGearsMetrics()
 {
-	FScopeLock lock(&EngineCriticalSection);
+	//FScopeLock lock(&EngineCriticalSection);
 #if  defined(WITH_BIOGEARS_BINDING) // TODO: Remove when biogears works on android
 	SimulationTime = BGEngine->GetSimulationTime(biogears::TimeUnit::s);
 #endif
@@ -803,10 +804,13 @@ FString UVH_BioGearsEngine::FixedCollapseRelativeDirectories(const FString& path
 
 void UVH_BioGearsEngine::BeginDestroy()
 {
-    Super::BeginDestroy();
 
+	Stop();
+    Super::BeginDestroy();
+	
 	if (BGEngine != nullptr)
 	{
+		FScopeLock lock(&EngineCriticalSection);
 		biogears::destroy_biogears_engine(&BGEngine);
 	}
 }
