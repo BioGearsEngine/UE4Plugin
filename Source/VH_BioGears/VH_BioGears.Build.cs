@@ -141,6 +141,8 @@ public class VH_BioGears : ModuleRules
 				}
 			}
 			PublicDefinitions.Add("WITH_BIOGEARS_BINDING=1");
+			PublicDefinitions.Add("BIOGEARS_IO_PRESENT");
+			PublicDefinitions.Add("BIOGEARS_IO_EMBED_STATES");
 
 			config.platform = "Win64";
 			config.architecture = "x86_64";
@@ -169,6 +171,9 @@ public class VH_BioGears : ModuleRules
 					return true;
 				}
 				PublicDefinitions.Add("WITH_BIOGEARS_BINDING=1");
+				PublicDefinitions.Add("BIOGEARS_IO_PRESENT");
+				PublicDefinitions.Add("BIOGEARS_IO_EMBED_STATES");
+
 			} else {
 				//Android UE4 Integration is currently broken so if the INI file does not contain a
 				//Explicit request to buildt these bindings we will abort and build the plugin with out
@@ -253,6 +258,9 @@ public class VH_BioGears : ModuleRules
 				}
 			}
 			PublicDefinitions.Add("WITH_BIOGEARS_BINDING=1");
+			PublicDefinitions.Add("BIOGEARS_IO_PRESENT");
+			PublicDefinitions.Add("BIOGEARS_IO_EMBED_STATES");
+
 
 			config.platform = "Linux";
 			config.architecture = "x86_64";
@@ -276,6 +284,9 @@ public class VH_BioGears : ModuleRules
 				}
 			}
 			PublicDefinitions.Add("WITH_BIOGEARS_BINDING=1");
+			PublicDefinitions.Add("BIOGEARS_IO_PRESENT");
+			PublicDefinitions.Add("BIOGEARS_IO_EMBED_STATES");
+
 			config.platform = "MacOS";
 			config.configuration = bDebug ? "debug" : "release";
 			config.lib_suffix = ".a";
